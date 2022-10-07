@@ -93,35 +93,26 @@ class Satchel {
    *
    * @return {Object} Satchel
    */
-  set({ data, expiry, creation }) {
+  set({ data, expiry }) {
     if (typeof expiry !== 'number' && expiry !== null) {
       throw new Error('Satchel: Expiry must be null or a number.')
     }
-    if (creation && typeof creation !== 'number') {
-      throw new Error('Satchel: Creation cannot be set directly.')
-    }
     const storedEntry = this.get(true);
     const temp = {};
-    temp.data = data || null; // Key exsists but we are not setting a data attribute
-    temp.expiry = expiry || data?.expiry || null;
+    temp.data = data || null;
+    temp.expiry = expiry || null;
 
     if (!data && !expiry && storedEntry)
       throw new Error(
-        `Satchel: The key ("${this.#pocketKey}") already exists in ${
-          this.#store === window.localStorage
-            ? 'LocalStorage'
-            : 'SessionStorage'
-        }, and "data" and "expiry" atributes have not been set, set these or create a new unique key.`
+        `Satchel: The key ("${
+          this.#pocketKey
+        }") already exists in ${Satchel.#storageAreaString(
+          this.#store
+        )}, and "data" and "expiry" atributes have not been set, set these or create a new unique key.`
       )
-    // Key exsists and the creation property is being changed
-    if (!data && storedEntry && creation) {
-      throw new Error(
-        'Satchel: Overwriting a key\'s "creation" property is not allowed.'
-      )
-    } else {
-      // dont overwrite existing creation time
-      temp.creation = storedEntry?.creation || Date.now();
-    }
+
+    // dont overwrite existing creation time
+    temp.creation = storedEntry.creation || Date.now();
     // Set storage values
     this.#store.setItem(this.#pocketKey, JSON.stringify(temp));
 
@@ -177,10 +168,10 @@ class Satchel {
    * Get the Storage type as a string 'localStorage' or 'sessionStorage'
    *
    * @param {object} Storage object
-   * @returns {string} the Storage type as a string 'localStorage' or 'sessionStorage'
+   * @returns {string} the Storage type as a string 'localStorage' or 'SessionStorage'
    */
   static #storageAreaString(store) {
-    return store === localStorage ? 'localStorage' : 'sessionStorage'
+    return store === localStorage ? 'LocalStorage' : 'SessionStorage'
   }
 
   /**
