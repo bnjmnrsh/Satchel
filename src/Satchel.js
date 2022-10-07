@@ -1,5 +1,5 @@
 /**
- * A utility for managaing sessionStorage and localStorage
+ * A utility library for managaing namespaced sessionStorage and localStorage entries.
  *
  */
 class Satchel {
@@ -64,14 +64,18 @@ class Satchel {
    * @returns {null | boolian:false } nullif su
    */
   bin() {
+    const item = this.#store.getItem(this.#pocketKey)
     this.#store.removeItem(this.#pocketKey)
     if (!this.#store.getItem(this.#pocketKey)) {
       Satchel.#emit({
-        type: this.#store,
         key: this.#pocketKey,
+        oldValue: JSON.parse(item),
+        storageArea:
+          this.#store === localStorage ? 'LocalStorage' : 'SessionStorage',
         action: 'bin'
       })
-      return null
+      this.#cargo = this.#settings
+      return true
     } else {
       throw new Error('Satchel: Failure to bin key: ' + this.#pocketKey)
     }
@@ -134,11 +138,12 @@ class Satchel {
     this.#cargo = { ...this.#cargo, ...temp }
 
     Satchel.#emit({
-      type: this.#store,
       key: this.#pocketKey,
-      action: 'set',
-      data: temp,
-      oldData: storedEntry
+      newValue: temp,
+      oldValue: storedEntry,
+      storageArea:
+        this.#store === localStorage ? 'LocalStorage' : 'SessionStorage',
+      action: 'set'
     })
     return this
   }
@@ -182,24 +187,42 @@ class Satchel {
   }
 
   /**
-   * Use Storage events?
-   * TODO:https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API#responding_to_storage_changes_with_the_storageevent
+   * Emulates the StorageEvent API, which may be preferable for some use cases.
+   * https://developer.mozilla.org/en-US/docs/Web/API/StorageEvent
    *
    * Emit custom events for Satchel
    * @typedef {CustomEvent}
-   * @param {object} detail current CustomEvent details
-   * @property {string} detail.type, the type of Storage object
-   * @property {string} detail.key name of the Storage key being called
-   * @property {string} detail.action the name of the function emiting the event
-   * @property {string | null} detail.data the stringified data for the given key
+   * @param {object} detail Event details
+   * @property {string|null} detail.key name of the Storage key being called
+   * @property {string|null} detail.pocket name of the Storage pocket being cleaned
+   * @property {string|null} detail.newValue the updated value of the Storage key
+   * @property {string|null} detail.oldValue the old value of the Storage key
+   * @property {number|null} detail.keysBefore then number of keys in the pocket before emptyPocket or tidyPocket
+   * @property {number|null} detail.keysAfter then number of keys in the pocket after emptyPocket or tidyPocket
+   * @property {string} detail.storageArea, the type of Storage object
+   * @property {string} detail.url, the url of the document whoes key changed
+   * @property {string} detail.action the name of the Satchel function emiting the event
+   * @property {boolean} [pocketClean = false] Optional flag to indiacte a emptyPocket or tidyPocket opperation.
    * @returns {CustomEvent} CustomEvent
    */
-  static #emit(detail) {
-    const required = {
-      type: null,
+  static #emit(detail = {}, pocketClean = false) {
+    let required = {
       key: null,
-      action: null,
-      data: null
+      newValue: null,
+      oldValue: null,
+      storageArea: null,
+      url: window.location.href || null,
+      action: null
+    }
+    if (pocketClean) {
+      required = {
+        pocket: null,
+        keysBefore: null,
+        keysRemaining: null,
+        storageArea: null,
+        url: window.location.href || null,
+        action: null
+      }
     }
     detail = { ...required, ...detail }
     const event = new CustomEvent('Satchel', {
@@ -230,17 +253,17 @@ class Satchel {
     })
     const keysRemaining = Satchel.getAllPocketKeys(pocket, local)
 
-    document.dispatchEvent(
-      new CustomEvent('Satchel', {
-        bubbles: true,
-        cancelable: true,
-        detail: {
-          action: 'emptyPocket',
-          keysBefore,
-          keysRemaining
-        }
-      })
+    Satchel.#emit(
+      {
+        pocket: pocket,
+        keysBefore,
+        keysRemaining,
+        storageArea: store === localStorage ? 'LocalStorage' : 'SessionStorage',
+        action: 'emptyPocket'
+      },
+      true
     )
+
     return keysRemaining
   }
 
@@ -262,18 +285,17 @@ class Satchel {
       store.removeItem(keysBefore[key])
     })
     const keysRemaining = Satchel.getAllPocketKeys(pocket, local).length
-    document.dispatchEvent(
-      new CustomEvent('Satchel', {
-        bubbles: true,
-        cancelable: true,
-        detail: {
-          action: 'tidyPocket',
-          keysBefore: keysBefore.length,
-          keysRemaining
-        }
-      })
-    )
 
+    Satchel.#emit(
+      {
+        pocket: pocket,
+        keysBefore: keysBefore.length,
+        keysRemaining,
+        storageArea: store === localStorage ? 'LocalStorage' : 'SessionStorage',
+        action: 'tidyPocket'
+      },
+      true
+    )
     return keysRemaining
   }
 
