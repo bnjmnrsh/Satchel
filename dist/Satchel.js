@@ -25,6 +25,7 @@ class Satchel {
     this.stcl = Satchel.stcl;
     this.#pocketKey = `${this.stcl}.${pocket}.${key}`;
     this.#settings = { data: undefined, expiry: null };
+
     this.#cargo = { ...this.#settings, ...cargo };
 
     if (typeof this.#cargo.expiry !== 'number' && this.#cargo.expiry !== null) {
@@ -71,8 +72,7 @@ class Satchel {
       Satchel.#emit({
         key: this.#pocketKey,
         oldValue: JSON.parse(item),
-        storageArea:
-          this.#store === localStorage ? 'LocalStorage' : 'SessionStorage',
+        storageArea: Satchel.#storageAreaString(this.#store),
         action: 'bin'
       });
       this.#cargo = this.#settings;
@@ -142,8 +142,7 @@ class Satchel {
       key: this.#pocketKey,
       newValue: temp,
       oldValue: storedEntry,
-      storageArea:
-        this.#store === localStorage ? 'LocalStorage' : 'SessionStorage',
+      storageArea: Satchel.#storageAreaString(this.#store),
       action: 'set'
     });
     return this
@@ -185,6 +184,16 @@ class Satchel {
       .filter(function (e) {
         return e
       })
+  }
+
+  /**
+   * Get the Storage type as a string 'localStorage' or 'sessionStorage'
+   *
+   * @param {object} Storage object
+   * @returns {string} the Storage type as a string 'localStorage' or 'sessionStorage'
+   */
+  static #storageAreaString(store) {
+    return store === localStorage ? 'localStorage' : 'sessionStorage'
   }
 
   /**
@@ -259,7 +268,7 @@ class Satchel {
         pocket: pocket,
         keysBefore,
         keysRemaining,
-        storageArea: store === localStorage ? 'LocalStorage' : 'SessionStorage',
+        storageArea: Satchel.#storageAreaString(store),
         action: 'emptyPocket'
       },
       true
@@ -292,7 +301,7 @@ class Satchel {
         pocket: pocket,
         keysBefore: keysBefore.length,
         keysRemaining,
-        storageArea: store === localStorage ? 'LocalStorage' : 'SessionStorage',
+        storageArea: Satchel.#storageAreaString(store),
         action: 'tidyPocket'
       },
       true
