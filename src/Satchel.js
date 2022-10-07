@@ -239,17 +239,14 @@ class Satchel {
     })
     const keysRemaining = Satchel.getAllPocketKeys(pocket, local)
 
-    document.dispatchEvent(
-      new CustomEvent('Satchel', {
-        bubbles: true,
-        cancelable: true,
-        detail: {
-          action: 'emptyPocket',
-          keysBefore,
-          keysRemaining
-        }
-      })
-    )
+    Satchel.#emit({
+      pocket: pocket,
+      keysBefore,
+      keysRemaining,
+      storageArea: store === localStorage ? 'LocalStorage' : 'SessionStorage',
+      action: 'emptyPocket'
+    })
+
     return keysRemaining
   }
 
@@ -271,18 +268,14 @@ class Satchel {
       store.removeItem(keysBefore[key])
     })
     const keysRemaining = Satchel.getAllPocketKeys(pocket, local).length
-    document.dispatchEvent(
-      new CustomEvent('Satchel', {
-        bubbles: true,
-        cancelable: true,
-        detail: {
-          action: 'tidyPocket',
-          keysBefore: keysBefore.length,
-          keysRemaining
-        }
-      })
-    )
 
+    Satchel.#emit({
+      pocket: pocket,
+      keysBefore: keysBefore.length,
+      keysRemaining,
+      storageArea: store === localStorage ? 'LocalStorage' : 'SessionStorage',
+      action: 'tidyPocket'
+    })
     return keysRemaining
   }
 
