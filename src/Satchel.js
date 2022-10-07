@@ -69,7 +69,7 @@ class Satchel {
     if (!this.#store.getItem(this.#pocketKey)) {
       Satchel.#emit({
         key: this.#pocketKey,
-        oldValue: JSON.stringify(item),
+        oldValue: JSON.parse(item),
         storageArea:
           this.#store === localStorage ? 'LocalStorage' : 'SessionStorage',
         action: 'bin'
