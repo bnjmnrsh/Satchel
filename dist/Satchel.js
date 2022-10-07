@@ -52,7 +52,7 @@ class Satchel {
   /**
    * Remove the current namespaced key from the store.
    *
-   * @returns {boolian:true | Error } Returns true on sucess, error if item is not found.
+   * @returns {boolian:true | null } Returns true on sucess
    */
   bin() {
     const item = this.#store.getItem(this.#pocketKey);
@@ -65,15 +65,19 @@ class Satchel {
         action: 'bin'
       });
       return true
-    } else {
-      throw new Error('Satchel: Failure to bin key: ' + this.#pocketKey)
     }
   }
 
-  get(ignore = false) {
+  /**
+   * Get the data for the current Storage key.
+   *
+   * @param {boolean} ignoreStale flag to ignore stale entries from a "pocket"
+   * @returns
+   */
+  get(ignoreStale = false) {
     const item = this.#store.getItem(this.#pocketKey);
     if (!item) return false
-    if ((this.isFresh() && !ignore) || ignore) {
+    if ((this.isFresh() && !ignoreStale) || ignoreStale) {
       return JSON.parse(item)
     }
     return false
