@@ -194,21 +194,35 @@ class Satchel {
    * @typedef {CustomEvent}
    * @param {object} detail Event details
    * @property {string|null} detail.key name of the Storage key being called
+   * @property {string|null} detail.pocket name of the Storage pocket being cleaned
    * @property {string|null} detail.newValue the updated value of the Storage key
    * @property {string|null} detail.oldValue the old value of the Storage key
+   * @property {number|null} detail.keysBefore then number of keys in the pocket before emptyPocket or tidyPocket
+   * @property {number|null} detail.keysAfter then number of keys in the pocket after emptyPocket or tidyPocket
    * @property {string} detail.storageArea, the type of Storage object
    * @property {string} detail.url, the url of the document whoes key changed
    * @property {string} detail.action the name of the Satchel function emiting the event
+   * @property {boolean} [pocketClean = false] Optional flag to indiacte a emptyPocket or tidyPocket opperation.
    * @returns {CustomEvent} CustomEvent
    */
-  static #emit(detail) {
-    const required = {
+  static #emit(detail = {}, pocketClean = false) {
+    let required = {
       key: null,
       newValue: null,
       oldValue: null,
       storageArea: null,
       url: window.location.href || null,
       action: null
+    }
+    if (pocketClean) {
+      required = {
+        pocket: null,
+        keysBefore: null,
+        keysRemaining: null,
+        storageArea: null,
+        url: window.location.href || null,
+        action: null
+      }
     }
     detail = { ...required, ...detail }
     const event = new CustomEvent('Satchel', {
@@ -239,13 +253,16 @@ class Satchel {
     })
     const keysRemaining = Satchel.getAllPocketKeys(pocket, local)
 
-    Satchel.#emit({
-      pocket: pocket,
-      keysBefore,
-      keysRemaining,
-      storageArea: store === localStorage ? 'LocalStorage' : 'SessionStorage',
-      action: 'emptyPocket'
-    })
+    Satchel.#emit(
+      {
+        pocket: pocket,
+        keysBefore,
+        keysRemaining,
+        storageArea: store === localStorage ? 'LocalStorage' : 'SessionStorage',
+        action: 'emptyPocket'
+      },
+      true
+    )
 
     return keysRemaining
   }
@@ -269,13 +286,16 @@ class Satchel {
     })
     const keysRemaining = Satchel.getAllPocketKeys(pocket, local).length
 
-    Satchel.#emit({
-      pocket: pocket,
-      keysBefore: keysBefore.length,
-      keysRemaining,
-      storageArea: store === localStorage ? 'LocalStorage' : 'SessionStorage',
-      action: 'tidyPocket'
-    })
+    Satchel.#emit(
+      {
+        pocket: pocket,
+        keysBefore: keysBefore.length,
+        keysRemaining,
+        storageArea: store === localStorage ? 'LocalStorage' : 'SessionStorage',
+        action: 'tidyPocket'
+      },
+      true
+    )
     return keysRemaining
   }
 
