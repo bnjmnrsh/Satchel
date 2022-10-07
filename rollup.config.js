@@ -21,7 +21,7 @@ const configs = {
 const banner = `
 /* ! @preserve ${configs.name ? configs.name : pkg.name} v${
   pkg.version
-} | (c) ${new Date().getFullYear()} ${pkg.author.name} | ${pkg.license} | ${
+} | (c) ${new Date().getFullYear()} ${pkg.author} | ${pkg.license} | ${
   pkg.repository.url
 } */`
 
@@ -40,20 +40,7 @@ const createOutput = function (filename, minify) {
       output.name = output.name.trim().replace(/\W+/g, '_')
     }
     if (minify) {
-      output.plugins = [
-        terser({
-          output: {
-            comments: function (node, comment) {
-              var text = comment.value
-              var type = comment.type
-              if (type == 'comment2') {
-                // multiline comment
-                return /@preserve|@license|@cc_on/i.test(text)
-              }
-            }
-          }
-        })
-      ]
+      output.plugins = [terser()]
     }
 
     output.sourcemap = configs.sourcemap
