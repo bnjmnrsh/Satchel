@@ -115,7 +115,7 @@ class Satchel {
       )
     } else {
       // dont overwrite existing creation time
-      temp.creation = storedEntry?.creation || creation
+      temp.creation = storedEntry?.creation || Date.now()
     }
     // Set storage values
     this.#store.setItem(this.#pocketKey, JSON.stringify(temp))
