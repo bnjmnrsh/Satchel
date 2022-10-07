@@ -1,4 +1,5 @@
-/*! satchel v1.0.0 | (c) 2022 undefined | ISC License | https://github.com/bnjmnrsh/ */
+
+/* ! @preserve satchel v1.0.0 | (c) 2022 undefined | ISC | https://github.com/bnjmnrsh/ */
 /**
  * A utility library for managaing namespaced sessionStorage and localStorage entries.
  */
