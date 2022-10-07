@@ -1,10 +1,8 @@
 /*! satchel v1.0.0 | (c) 2022 undefined | ISC License | https://github.com/bnjmnrsh/ */
 /**
  * A utility library for managaing namespaced sessionStorage and localStorage entries.
- *
  */
 class Satchel {
-  #cargo
   #pocketKey
   #store
   #settings
@@ -26,20 +24,10 @@ class Satchel {
     this.#pocketKey = `${this.stcl}.${pocket}.${key}`;
     this.#settings = { data: undefined, expiry: null };
 
-    this.#cargo = { ...this.#settings, ...cargo };
+    cargo = { ...this.#settings, ...cargo };
 
-    if (typeof this.#cargo.expiry !== 'number' && this.#cargo.expiry !== null) {
-      throw new Error('Satchel: Expiry must be null or a number.')
-    }
-    // Keep creation time from being edited
-    Object.defineProperty(this.#cargo, 'creation', {
-      enumerable: true,
-      writable: false,
-      value: Date.now()
-    });
-
-    // set the cargo in Storage
-    this.set(this.#cargo);
+    // Set the cargo to Storage
+    this.set(cargo);
   }
 
   /**
@@ -62,8 +50,9 @@ class Satchel {
   }
 
   /**
+   * Remove the current namespaced key from the store.
    *
-   * @returns {null | boolian:false } nullif su
+   * @returns {boolian:true | Error } Returns true on sucess, error if item is not found.
    */
   bin() {
     const item = this.#store.getItem(this.#pocketKey);
@@ -75,7 +64,6 @@ class Satchel {
         storageArea: Satchel.#storageAreaString(this.#store),
         action: 'bin'
       });
-      this.#cargo = this.#settings;
       return true
     } else {
       throw new Error('Satchel: Failure to bin key: ' + this.#pocketKey)
@@ -102,18 +90,16 @@ class Satchel {
    * @return {Object} Satchel
    */
   set({ data, expiry, creation }) {
-    if (typeof this.#cargo.expiry !== 'number' && this.#cargo.expiry !== null) {
+    if (typeof expiry !== 'number' && expiry !== null) {
       throw new Error('Satchel: Expiry must be null or a number.')
     }
-    if (typeof this.#cargo.creation !== 'number') {
-      throw new Error(
-        'Satchel: Creation must be null or a number, it should not be set directly.'
-      )
+    if (creation && typeof creation !== 'number') {
+      throw new Error('Satchel: Creation cannot be set directly.')
     }
     const storedEntry = this.get(true);
     const temp = {};
     temp.data = data || null; // Key exsists but we are not setting a data attribute
-    temp.expiry = expiry || this.#cargo?.expiry || null;
+    temp.expiry = expiry || data?.expiry || null;
 
     if (!data && !expiry && storedEntry)
       throw new Error(
@@ -130,13 +116,10 @@ class Satchel {
       )
     } else {
       // dont overwrite existing creation time
-      temp.creation = storedEntry?.creation || this.#cargo.creation;
+      temp.creation = storedEntry?.creation || Date.now();
     }
     // Set storage values
     this.#store.setItem(this.#pocketKey, JSON.stringify(temp));
-
-    // Update internal reference object
-    this.#cargo = { ...this.#cargo, ...temp };
 
     Satchel.#emit({
       key: this.#pocketKey,
