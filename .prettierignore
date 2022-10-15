@@ -3,6 +3,7 @@ docs
 dist
 build
 coverage
+LICENSE
 
 # Ignore vendor assetts
 src/js/vendor
