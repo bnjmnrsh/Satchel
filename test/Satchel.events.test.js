@@ -1,54 +1,127 @@
-/**
- * TODO: Add tests to check for custom events
- *
- * What I would like to to trigger the custom event using Satchel.set() for example,
- * and evaluate event object produced, as captured by a listener.
- *
- * Because #emit is a private method I cant jest.spyOn it, and I cant mock it.
- * https://ilikekillnerds.com/2020/02/testing-event-listeners-in-jest-without-using-a-library/
- * https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.unit_testing_using_jest_patterns
- *
- * Things I've tried: loading jsdom, I believe this may not be working because Jest ships with its own JSDOM
- * so i need to tap into that, and I also need to better understand if this is an async event or not.
- *
- */
+/*
+  Because Satchel.#emit is private, we can't use jest.spyOn, and we can't mock it,
+  as suggested by many articles like this one:
+  https://ilikekillnerds.com/2020/02/testing-event-listeners-in-jest-without-using-a-library/
+
+  We can, however, use jest-environment-jsdom to listen for CustomEvents on the window.
+  We can then use just.fn() to mock the event response instead. In this case,
+  our issue is that our event payload includes timestamps.
+  This limitation presents a challenge because after unwinding the returned Promise,
+  Jest does not provide methods for testing individual property values as we have with
+  `expect.objectContaining()`. Instead, we need to work with `.resolves.toReturnWith()`
+  to access the Promise response, which we can test against a preconfigured object.
+  Because we can't choose which properties within the promise response to test,
+  we must first remove any data that might change unpredictably
+  in the response from our eventListener (like timestamps), from within jest.fn() before it returns.
+*/
 
 import { Satchel } from '../src/Satchel'
 import { expect, jest, test, describe } from '@jest/globals'
-import { JSDOM } from 'jsdom'
-
-import util from 'util'
-// var util = require('util')
-const encoder = new util.TextEncoder('utf-8')
 
 describe('Satchel: testing custom events', () => {
-  //   let events = {}
-  //   let dom
+  beforeEach(() => {
+    sessionStorage.clear()
+  })
 
-  //   beforeEach(async () => {
-  //     sessionStorage.clear()
-  //     dom = await JSDOM.fromFile('./test/testable.html', {
-  //       resources: 'usable',
-  //       runScripts: 'dangerously'
-  //     })
-  //     await new Promise((resolve) => dom.window.addEventListener('load', resolve))
+  const fn = jest.fn((e) => {
+    const eventData = e.detail
 
-  //     jest.restoreAllMocks()
-  //   })
+    // We nuke the creation timestamps so we can run deterministic tests
+    if (eventData.newValue) {
+      let newValue = JSON.parse(eventData.newValue)
+      newValue.creation = null
+      eventData.newValue = JSON.stringify(newValue)
+    }
 
-  //   test('Satchel: Test set() custom event', async () => {
-  //     function handelEvent(e) {
-  //       return e
-  //     }
-  //     dom.window.addEventListener('Satchel', handelEvent)
-  //     dom.window.taco = await new Satchel('taco', {
-  //       data: 'tacos!',
-  //       expiry: null
-  //     })
-  //     await expect(handelEvent).resolves.toBe({})
-  //   })
-  test('Satchel: Test get() custom event', () => {})
-  test('Satchel: Test bin() custom event', () => {})
-  test('Satchel: Test tidyPocket() custom event', () => {})
-  test('Satchel: Test emptyPocket() custom event', () => {})
+    if (eventData.oldValue) {
+      let oldValue = JSON.parse(eventData.oldValue)
+      oldValue.creation = null
+      eventData.oldValue = JSON.stringify(oldValue)
+    }
+
+    eventData.url = null // URL could change depeding on testing environment, so null
+
+    return eventData
+  })
+
+  test('Satchel: Test set() custom event', async () => {
+    const expectedReturn = {
+      action: 'set',
+      key: 'stcl.pocket.taco',
+      newValue: JSON.stringify({
+        data: 'a tasty treat',
+        expiry: null,
+        creation: null
+      }),
+      oldValue: null,
+      storageArea: 'SessionStorage',
+      url: null
+    }
+    window.addEventListener('Satchel', fn)
+    new Satchel('taco', { data: 'a tasty treat' })
+    expect(Promise.resolve(fn)).resolves.toReturnWith(expectedReturn)
+    removeEventListener('Satchel', fn)
+  })
+
+  test('Satchel: Test bin() custom event', () => {
+    const expectedReturn = {
+      action: 'bin',
+      key: 'stcl.pocket.taco',
+      newValue: null,
+      oldValue: JSON.stringify({
+        data: 'a tasty treat',
+        expiry: null,
+        creation: null
+      }),
+      storageArea: 'SessionStorage',
+      url: null
+    }
+    const mySatchel = new Satchel('taco', { data: 'a tasty treat' })
+    window.addEventListener('Satchel', fn)
+    mySatchel.bin()
+    expect(Promise.resolve(fn)).resolves.toHaveLastReturnedWith(expectedReturn)
+    removeEventListener('Satchel', fn)
+  })
+  test('Satchel: Test tidyPocket() custom event', () => {
+    const expectedReturn = {
+      action: 'tidyPocket',
+      pocket: 'pocket',
+      keysBefore: 2,
+      keysRemaining: 1,
+      storageArea: 'SessionStorage',
+      url: null
+    }
+    new Satchel('taco', { data: 'a tasty treat', expiry: null })
+    new Satchel('old-taco', {
+      data: 'a sad mushy plate',
+      expiry: Date.now() - 50000
+    })
+
+    window.addEventListener('Satchel', fn)
+    const tidy = Satchel.tidyPocket()
+    expect(tidy).toBe(1)
+    expect(Promise.resolve(fn)).resolves.toHaveLastReturnedWith(expectedReturn)
+    removeEventListener('Satchel', fn)
+  })
+  test('Satchel: Test emptyPocket() custom event', () => {
+    const expectedReturn = {
+      action: 'emptyPocket',
+      pocket: 'pocket',
+      keysBefore: 2,
+      keysRemaining: 0,
+      storageArea: 'SessionStorage',
+      url: null
+    }
+    new Satchel('taco', { data: 'a tasty treat', expiry: null })
+    new Satchel('old-taco', {
+      data: 'a sad mushy plate',
+      expiry: Date.now() - 50000
+    })
+
+    window.addEventListener('Satchel', fn)
+    const empty = Satchel.emptyPocket()
+    expect(empty).toBe(0)
+    expect(Promise.resolve(fn)).resolves.toHaveLastReturnedWith(expectedReturn)
+    removeEventListener('Satchel', fn)
+  })
 })

@@ -1,5 +1,5 @@
 
-/* ! @preserve satchel v1.0.0 | (c) 2022 undefined | ISC | https://github.com/bnjmnrsh/ */
+/* ! @preserve satchel v1.0.0 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/ */
 var satchel = (function (exports) {
   'use strict';
 
@@ -14,7 +14,7 @@ var satchel = (function (exports) {
     /**
      * @class Satchel
      * @classdec Create new Satchel instance
-     * @param {string} key Storage key
+     * @param {string|null} key Storage key
      * @param {object} cargo The cargo payload to be saved to Storage
      * @property {object|string} cargo.data The data to be saved, may be string or object
      * @property {number|null} cargo.expiry The expiry time of the cargo ,may be a number or null
@@ -37,7 +37,7 @@ var satchel = (function (exports) {
     /**
      * Returns an object of age and freshness related data
      *
-     * @typedef {Object} Age object
+     * @typedef {object} age object
      * @property {number} age in milliseconds
      * @property {number} creation Date.now() (ms)src/Satchel.js
      * @property {boolean} fresh if Store key is fresh
@@ -64,7 +64,7 @@ var satchel = (function (exports) {
       if (!this.#store.getItem(this.#pocketKey)) {
         Satchel.#emit({
           key: this.#pocketKey,
-          oldValue: JSON.parse(item),
+          oldValue: item,
           storageArea: Satchel.#storageAreaString(this.#store),
           action: 'bin'
         });
@@ -122,8 +122,8 @@ var satchel = (function (exports) {
 
       Satchel.#emit({
         key: this.#pocketKey,
-        newValue: temp,
-        oldValue: storedEntry,
+        newValue: JSON.stringify(temp),
+        oldValue: storedEntry || null,
         storageArea: Satchel.#storageAreaString(this.#store),
         action: 'set'
       });
@@ -243,12 +243,12 @@ var satchel = (function (exports) {
       Object.keys(keysBefore).forEach((key) => {
         store.removeItem(keysBefore[key]);
       });
-      const keysRemaining = Satchel.getAllPocketKeys(pocket, local);
+      const keysRemaining = Satchel.getAllPocketKeys(pocket, local).length;
 
       Satchel.#emit(
         {
           pocket: pocket,
-          keysBefore,
+          keysBefore: keysBefore.length,
           keysRemaining,
           storageArea: Satchel.#storageAreaString(store),
           action: 'emptyPocket'
