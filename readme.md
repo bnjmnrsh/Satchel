@@ -1,3 +1,3 @@
 # Satchel.js
 
-A lightweight browser Storage library.
+A library for managing sessionStorage and localStorage.
