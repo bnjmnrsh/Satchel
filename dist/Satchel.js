@@ -1,5 +1,5 @@
 
-/* ! @preserve @bnjmnrsh/satchel v1.0.0 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
+/* ! @preserve @bnjmnrsh/satchel v0.1.1 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
 /**
  * A utility library for managaing namespaced sessionStorage and localStorage entries.
  */
