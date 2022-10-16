@@ -1,5 +1,5 @@
 
-/* ! @preserve @bnjmnrsh/satchel v1.0.0 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
+/* ! @preserve @bnjmnrsh/satchel v0.1.1 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
 var _bnjmnrsh_satchel = (function (exports) {
   'use strict';
 

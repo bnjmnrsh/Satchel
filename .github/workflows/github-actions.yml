@@ -7,16 +7,28 @@ jobs:
     # Necessary to push the generated badges to the repo
     - name: Check out repository code
       uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
+
     - name: Install modules
       run: yarn
+
     # Run the build command to ensure that banner details are updated from package.json properly.
     - name: Build
       run: yarn build
+
+    - name: Git Auto Commit
+      uses: stefanzweifel/git-auto-commit-action@v4.15.1
+      with:
+        commit_message: Auto build
+        repository: ./dist/
+
     # Necessary to generate the coverage report.
     # Make sure to add 'json-summary' to the coverageReporters in jest options
     - name: Run Tests
       run: yarn test-ci
+
     - name: Generating coverage badges
       uses: 'jpb06/jest-badges-action@latest'
       with:
-        branches: main
+        branches: main,ci-build
