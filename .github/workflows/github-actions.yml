@@ -10,10 +10,18 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
 
+    # Install the npm moduels onto the testing environment
     - name: Install modules
       run: yarn
 
-    # Run the build command to ensure that banner details are updated from package.json properly.
+    # Necessary to generate the coverage report.
+    # Make sure to add 'json-summary' to the coverageReporters in jest options
+    - name: Run Tests
+      run: yarn test-ci
+
+    # Run the build to ensure that banner details are updated from package.json properly (ie version number etc).
+    # Rollup --watch and --watchAll do not update these when package.json is updated.
+    # This step also ensures that the project builds as expected.
     - name: Build
       run: yarn build
 
@@ -22,11 +30,6 @@ jobs:
       with:
         commit_message: Auto build
         repository: ./dist/
-
-    # Necessary to generate the coverage report.
-    # Make sure to add 'json-summary' to the coverageReporters in jest options
-    - name: Run Tests
-      run: yarn test-ci
 
     - name: Generating coverage badges
       uses: 'jpb06/jest-badges-action@latest'
