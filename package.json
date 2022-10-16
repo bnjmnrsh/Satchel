@@ -22,6 +22,7 @@
     "bnjmnrsh"
   ],
   "jest": {
+    "verbose": true,
     "transform": {},
     "resetMocks": false,
     "setupFiles": [
@@ -30,6 +31,10 @@
     "testEnvironment": "jsdom",
     "coverageReporters": [
       "json-summary"
+    ],
+    "collectCoverageFrom": [
+      "./src/*.{js,jsx,ts}",
+      "!**/node_modules/**"
     ]
   },
   "devDependencies": {
