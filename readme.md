@@ -20,4 +20,4 @@ A utility for managing namespaced sessionStorage and localStorage entries.
 
 ### Installation
 
-`npm i https://github.com/bnjmnrsh/dist/Satchel.min.js`
+`npm i https://github.com/bnjmnrsh/satchel`
