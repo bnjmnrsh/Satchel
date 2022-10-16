@@ -7,12 +7,13 @@ jobs:
     # Necessary to push the generated badges to the repo
     - name: Check out repository code
       uses: actions/checkout@v2
+    - name: Install modules
+      run: yarn
     # Necessary to generate the coverage report.
     # Make sure to add 'json-summary' to the coverageReporters in jest options
-    - name: Tests
+    - name: Run Tests
       run: yarn test-ci
-    [...]
     - name: Generating coverage badges
-      uses: jpb06/jest-badges-action@latest
-        with:
-          branches: master,preprod,staging
+      uses: 'jpb06/jest-badges-action@latest'
+      with:
+        branches: main,jest-ci-fix
