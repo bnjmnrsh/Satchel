@@ -9,6 +9,9 @@ jobs:
       uses: actions/checkout@v2
     - name: Install modules
       run: yarn
+    # Run the build command to ensure that banner details are updated from package.json properly.
+    - name: Build
+      run: yarn build
     # Necessary to generate the coverage report.
     # Make sure to add 'json-summary' to the coverageReporters in jest options
     - name: Run Tests
@@ -16,4 +19,4 @@ jobs:
     - name: Generating coverage badges
       uses: 'jpb06/jest-badges-action@latest'
       with:
-        branches: main
+        branches: main,ci-build
