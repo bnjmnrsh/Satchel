@@ -1,19 +1,16 @@
 import { Satchel } from '../src/Satchel'
-import {expect, jest, test} from '@jest/globals';
+import { expect, jest, test } from '@jest/globals'
 
 beforeEach(() => {
   // to fully reset the state between tests, clear the storage
-    localStorage.clear( );
-});
-
+  localStorage.clear()
+})
 
 test('Retrieving values from an  expired key.', () => {
-  const KEY = 'test'
-  const VALUE = 'expired'
-  const EXP = Date.now()
+  const EXP = Date.now() - 3000
 
-  const satchel = new Satchel(KEY)
-  satchel.set({data: VALUE, expiry: EXP})
+  const satchel = new Satchel('test')
+  satchel.set({ data: 'expired', expiry: EXP })
 
   expect(satchel.get()).toEqual(false)
   expect(satchel.isFresh()).toEqual(false)
@@ -22,13 +19,21 @@ test('Retrieving values from an  expired key.', () => {
   expect(satchel.get(true)).toHaveProperty('creation')
 })
 
-
 test('Satchel.isFresh() by creating two entries, one fresh, and one expired."', () => {
   const FUTURE = Date.now() + 15000
   const PAST = Date.now() - 15000
-  const notExpired = new Satchel('not-expired', { data: "NOT EXPIRED", expiry: FUTURE })
-  const expired = new Satchel('expired', { data: "EXPIRED", expiry: PAST })
+  const notExpired = new Satchel('not-expired', {
+    data: 'NOT EXPIRED',
+    expiry: FUTURE
+  })
+  const expired = new Satchel('expired', { data: 'EXPIRED', expiry: PAST })
 
   expect(notExpired.isFresh()).toBe(true)
   expect(expired.isFresh()).toBe(false)
+})
+
+test('Satchel.isFresh() against a missing record"', () => {
+  const notThere = new Satchel('notThere')
+  notThere.bin()
+  expect(notThere.isFresh()).toBe(null)
 })
