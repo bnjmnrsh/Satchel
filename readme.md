@@ -20,6 +20,7 @@
 - [Installation](#Installation)
 - [How to use](#how-to-use-↑)
 - [Session & Local Storage](#session-&-local-storage-↑)
+- [Pockets & Namespaces](#pockets-&-namespaces-↑)
 - [Satchel Events](#satchel-events-↑)
 - [Freshness](#satchel-freshness-↑)
 - [Satchel Instance Methods](#satchel-instance-methods-↑)
@@ -77,6 +78,25 @@ console.log(taco.get()) // {data: 'a tasty treat', expiry: null}
 
 ```javascript
 const localTaco = new Satchel('localTaco', {data: 'a yummy treat'}, true);
+```
+
+## Pockets & Namespaces [↑](#table-of-contents)
+`Satchel` scopes all of it's entries using a 'pocket' namespace, which can be modified as needed as the fourth  parameter during instatiation:
+
+```javascript
+const taco1 = new Satchel('taco', {data: 'a yummy treat'}, false);
+const taco2 = new Satchel('taco', {data: 'a yummy treat'}, false, 'tacoTruck');
+
+console.log(taco1.getKey()); // stcl.pocket.taco <- default 'pocket' namespace
+console.log(taco2.getKey()); // stcl.tacoTruck.taco <-- custom 'pocket' namespace
+```
+
+The key prefix of '`stcl` may be customised prior to instatiation by setting the  `Satchel.stcl` property:
+
+```javascript
+Satchel.stcl = 'restraunt'
+const taco = new Satchel('taco', {data: 'a yummy treat'}, false);
+console.log(taco.getKey()); // restaurant.pocket.taco <-- custom prefix namespace
 ```
 
 ---
@@ -164,6 +184,18 @@ Accepts two values: `data` (string|object) and `expiry` (number). Objects passed
 
 Useage: `.set({data: 'tacos are great pub food', expiry: Date.now() + someTime})`
 
+[`CustomEvent`](#satchel-events-↑):
+```javascript
+e.detail {
+  action: 'set'
+  key: 'stcl.pocket.taco',
+  newValue: {data: 'a tasty treat': expiry: null, creation: 1666013618656},
+  oldValue: {data: 'an even tastier treat': expiry: null, creation: 1666013618656},
+  storageArea: 'SessionStorage',
+  url: 'http://localhost:8080',
+}
+```
+
 #### `.isFresh()` -> boolean
 Returns a `boolean` indicating the Freshness of the current store.
 
@@ -178,10 +210,10 @@ console.log(taco.getKey()) // "stchl.pocket.taco"
 ```
 
 ## Satchel Static Methods [↑](#table-of-contents)
-`Satchel` also has several static methods to manage pocket namespaces and Stores:
+`Satchel` also has several static methods to manage pocket namespaces in storage:
 
 ### `Satchel.getAllPocketKeys(pocket = 'pocket', local = false)`
-Returns an array of all keys from a given store with a pocket namespace. This list includes keys that may be stale.
+ This list includes keys that may be stale. Accepts a string for the 'pocket' to look for, and a boolean for the storage area. Defaults to `false` for `sessionStorage`, `true` for `localStorage`. Returns an array of all keys from a given store within a pocket's namespace.
 
 Usage:
 ```javascript
@@ -193,12 +225,12 @@ Removes expired items from Storage. Accepts a string for the 'pocket' to tidy an
 Useage: `Satchel.tidyPocket('myPocket', true)`
 
 ### `Satchel.emptyPocket(pocket = 'pocket', local = false)`
-Completely empties a Store of all keys with a given 'pocket' namespace, regardless of Freshness. Accepts a `string` namespace of the 'pocket' to be emptied and a `boolean` for the storage area. Defaults to `false` for `sessionStorage`, `true` for `localStorage`. Returns
+Completely empties a Store of all keys with a given 'pocket' namespace, regardless of Freshness. Accepts a `string` namespace of the 'pocket' to be emptied and a `boolean` for the storage area. Defaults to `false` for `sessionStorage`, `true` for `localStorage`.
 
 Useage: `Satchel.emptyPocket('pocket', true)`
 
 ### `Satchel.getSatchel(key, pocket = 'pocket', local = false)`
-Returns a `Satchel` instance if the key is found in Storage or `false` if not found. `.getSatchel()` accepts a `string` for both the 'key' (required) and the 'pocket' (optional) namespace and a `boolean` for the storage area. Defaults to `false` for `sessionStorage`, `true` for `localStorage`.
+Returns a `Satchel` instance if the key is found in Storage or `false` if not found. Accepts a `string` for both the 'key' (required) and the 'pocket' (optional) and a `boolean` for the storage area. Defaults to `false` for `sessionStorage`, `true` for `localStorage`.
 
 Useage: `Satchel.getSatchel('taco', 'pocket', true)`
 
