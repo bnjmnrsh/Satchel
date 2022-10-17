@@ -27,12 +27,12 @@
 - [Licence & Copyright](#licence-isc-↑)
 
 ---
-### Installation
+## Installation
 
 ```bash
 npm i https://github.com/bnjmnrsh/satchel
 ```
-
+---
 ## How to use [↑](#table-of-contents)
 
 ```javascript
@@ -71,6 +71,7 @@ taco.set({data: 'a tasty treat'})
 console.log(taco.get()) // {data: 'a tasty treat', expiry: null}
 ```
 
+---
 ## Session & Local Storage [↑](#table-of-contents)
 
 `Satchel` uses `sessionStorage` by default. You can specify `localStorage` by passing `true` as  a third  parameter during instatiation:
@@ -79,6 +80,7 @@ console.log(taco.get()) // {data: 'a tasty treat', expiry: null}
 const localTaco = new Satchel('localTaco', {data: 'a yummy treat'}, true);
 ```
 
+---
 ## Pockets & Namespaces [↑](#table-of-contents)
 `Satchel` scopes all of it's entries using a 'pocket' namespace, which can be modified as needed as the fourth  parameter during instatiation:
 
@@ -140,6 +142,7 @@ The `action` property is unique to `Satchel` and indicates the method which fire
 
 Additionally the static methods [`Satchel.tidyPocket()`](#satcheltidypocketpocket--pocket-local--false) and [`Satchel.emptyPocket()`](#satchelemptypocketpocket--pocket-local--false) also emit events with details related to these opperations, which are unique to `Satchel`. See method documentation for details.
 
+---
 ## Satchel instance methods [↑](#table-of-contents)
 To work with stored data, `Satchel` provides several instance methods:
 
