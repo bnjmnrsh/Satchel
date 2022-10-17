@@ -26,4 +26,10 @@ describe('Satchel: age() should return {age:(ms), creation:(ms), expiry:(ms), fr
     expect(oldTacoAge.expiry).toBe(timeStamp)
     expect(oldTacoAge).toHaveProperty('fresh', false)
   })
+
+  test('a missing record', () => {
+    const noTaco = new Satchel('noTaco')
+    noTaco.bin()
+    expect(noTaco.age()).toBe(null)
+  })
 })
