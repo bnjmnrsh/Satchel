@@ -22,6 +22,13 @@ test('Satchel: Test bin() to remove an entry from Storage', () => {
   expect(tacoSession.get(true)).toBe(false)
 })
 
+test('Satchel: Test bin() to remove a missing record', () => {
+  const noTaco = new Satchel('taco')
+  noTaco.bin()
+
+  expect(noTaco.bin()).toBe(null)
+})
+
 test('Satchel: Test getAllPocketKeys()', () => {
   // create pocket entries
   ;[...Array(10)].forEach(
@@ -48,8 +55,6 @@ test('Satchel: Test emptyPocket() to remove all entries from a "pocket"', () => 
 })
 
 test('Satchel: Test tidyPocket() to remove a stale entries from a "pocket"', () => {
-  sessionStorage.clear()
-
   // create non pocket entries
   ;[...Array(10)].forEach((element, i) =>
     sessionStorage.setItem(`test-${i}`, 'test')
@@ -75,4 +80,9 @@ test('Satchel: Test tidyPocket() to remove a stale entries from a "pocket"', () 
   expect(sessionStorage.length).toEqual(20)
   Satchel.tidyPocket('taco-truck', false)
   expect(sessionStorage.length).toEqual(11)
+})
+
+test('Satchel: Test tidyPocket() to return null when no items to prune', () => {
+  const emptyPocket = Satchel.tidyPocket()
+  expect(emptyPocket).toBe(null)
 })
