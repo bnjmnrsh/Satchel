@@ -4,15 +4,14 @@
   https://ilikekillnerds.com/2020/02/testing-event-listeners-in-jest-without-using-a-library/
 
   We can, however, use jest-environment-jsdom to listen for CustomEvents on the window.
-  We can then use just.fn() to mock the event response instead. In this case,
-  our issue is that our event payload includes timestamps.
-  This limitation presents a challenge because after unwinding the returned Promise,
-  Jest does not provide methods for testing individual property values as we have with
+  We can then use just.fn() to mock the event response instead. In this case, our event payload
+  includes timestamps which presents a challenge, because after unwinding the returned Promise,
+  Jest does not provide methods for easy testing individual property values, like we can with
   `expect.objectContaining()`. Instead, we need to work with `.resolves.toReturnWith()`
-  to access the Promise response, which we can test against a preconfigured object.
+  to access the Promise response, and so we must test against a preconfigured object.
   Because we can't choose which properties within the promise response to test,
   we must first remove any data that might change unpredictably
-  in the response from our eventListener (like timestamps), from within jest.fn() before it returns.
+  like timestamps), from within jest.fn() before it returns.
 */
 
 import { Satchel } from '../src/Satchel'
@@ -82,6 +81,7 @@ describe('Satchel: testing custom events', () => {
     expect(Promise.resolve(fn)).resolves.toHaveLastReturnedWith(expectedReturn)
     removeEventListener('Satchel', fn)
   })
+
   test('Satchel: Test tidyPocket() custom event', () => {
     const expectedReturn = {
       action: 'tidyPocket',
@@ -103,6 +103,7 @@ describe('Satchel: testing custom events', () => {
     expect(Promise.resolve(fn)).resolves.toHaveLastReturnedWith(expectedReturn)
     removeEventListener('Satchel', fn)
   })
+
   test('Satchel: Test emptyPocket() custom event', () => {
     const expectedReturn = {
       action: 'emptyPocket',
