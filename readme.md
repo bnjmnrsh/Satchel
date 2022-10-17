@@ -2,7 +2,6 @@
 
  __A sessionStorage & localStorage utility with namespaced entries and extra Freshness.__
 
-
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/bnjmnrsh/satchel)](https://github.com/bnjmnrsh/Satchel)
 [![GitHub license](https://img.shields.io/github/license/bnjmnrsh/Satchel)](https://github.com/bnjmnrsh/Satchel/blob/master/LICENSE)
 [![GitHub file size in bytes](https://img.shields.io/github/size/bnjmnrsh/satchel/dist/Satchel.min.js)](https://raw.githubusercontent.com/bnjmnrsh/Satchel/main/dist/Satchel.min.js)
