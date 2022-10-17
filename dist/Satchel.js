@@ -1,5 +1,5 @@
 
-/* ! @preserve @bnjmnrsh/satchel v0.1.1 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
+/* ! @preserve @bnjmnrsh/satchel v0.1.3 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
 /**
  * A utility library for managaing namespaced sessionStorage and localStorage entries.
  */
@@ -20,15 +20,15 @@ class Satchel {
    */
   constructor(key = null, cargo = {}, local = false, pocket = 'pocket') {
     this.#store = local ? window.localStorage : window.sessionStorage;
-    if (!key) throw new Error('Satchel: a key is required.')
+    if (!key) throw new Error('Satchel: a "key" is required.')
     if (typeof key !== 'string')
-      throw new Error('Satchel: key must be a string')
+      throw new Error('Satchel: "key" must be a string.')
     if (typeof cargo !== 'object')
-      throw new Error('Satchel: cargo must be an object')
+      throw new Error('Satchel: {cargo} must be an object.')
     if (typeof local !== 'boolean')
-      throw new Error('Satchel: local must be true or false')
+      throw new Error('Satchel: local must be a boolean.')
     if (typeof pocket !== 'string')
-      throw new Error('Satchel: pocket must be an string')
+      throw new Error('Satchel: "pocket" must be an string.')
 
     this.stcl = Satchel.stcl;
     this.#pocketKey = `${this.stcl}.${pocket}.${key}`;
@@ -51,9 +51,10 @@ class Satchel {
    */
   age() {
     const store = JSON.parse(this.#store.getItem(this.#pocketKey));
+    if (!store) return null
     return {
       age: Number(Date.now() - store.creation),
-      creation: store.creation ? Number(store.creation) : null,
+      creation: Number(store.creation),
       expiry: store.expiry ? Number(store.expiry) : null,
       fresh: Boolean(this.isFresh())
     }
@@ -62,32 +63,31 @@ class Satchel {
   /**
    * Remove the current namespaced key from the store.
    *
-   * @returns {boolian:true | null } Returns true on sucess
+   * @returns { boolian:true | null } Returns true on success, or null if no record found.
    */
   bin() {
     const item = this.#store.getItem(this.#pocketKey);
+    if (!item) return null
     this.#store.removeItem(this.#pocketKey);
-    if (!this.#store.getItem(this.#pocketKey)) {
-      Satchel.#emit({
-        key: String(this.#pocketKey),
-        oldValue: String(item),
-        storageArea: String(Satchel.#storageAreaString(this.#store)),
-        action: 'bin'
-      });
-      return true
-    }
+    Satchel.#emit({
+      key: String(this.#pocketKey),
+      oldValue: String(item),
+      storageArea: String(Satchel.#storageAreaString(this.#store)),
+      action: 'bin'
+    });
+    return true
   }
 
   /**
    * Get the data for the current Storage key.
    *
-   * @param {boolean} ignoreStale flag to ignore stale entries from a "pocket"
-   * @returns
+   * @param {boolean} getStale flag to ignore stale entries from a "pocket"
+   * @returns {object|boolan:false} the data for the stored key or false.
    */
-  get(ignoreStale = false) {
+  get(getStale = false) {
     const item = this.#store.getItem(this.#pocketKey);
     if (!item) return false
-    if ((this.isFresh() && !ignoreStale) || ignoreStale) {
+    if ((this.isFresh() && !getStale) || getStale) {
       return JSON.parse(item)
     }
     return false
@@ -101,18 +101,13 @@ class Satchel {
    * @property {number|null} expiry the expiery date in (ms)
    * @property {number} creation the creation date in (ms) Date.now()
    *
-   * @return {Object} Satchel
+   * @return {object} Satchel
    */
   set({ data, expiry }) {
     if (typeof expiry !== 'number' && expiry !== null) {
       throw new Error('Satchel: Expiry must be null or a number.')
     }
-    if (
-      typeof data !== 'string' &&
-      typeof data !== 'object' &&
-      data !== undefined
-    ) {
-      console.warn(typeof data);
+    if (data && typeof data !== 'string' && typeof data !== 'object') {
       throw new Error('Satchel: Data must be a string or an object.')
     }
     const storedEntry = this.get(true);
@@ -147,41 +142,22 @@ class Satchel {
   /**
    * Check if current item is fresh.
    *
-   * @returns {boolean} true if the item has not expired
+   * @returns {boolean|null} true if the item has not expired, null if the record doesn't exist.
    */
   isFresh() {
     const store = JSON.parse(this.#store.getItem(this.#pocketKey));
+    if (!store) return null
     return Boolean(!store?.expiry ? true : store.expiry - Date.now() > 0)
   }
 
   /**
-   * Returns the current namespaced Store key (pocket.key), the key is prefixed with 'stcl'
+   * Returns the current namespaced Store key (pocket.key), the key is prefixed with 'stcl'.
+   * Note that this is the internal reference to the key, not proof the key has been set to Storage.
    *
    * @returns {string} the key to the current pocket-key
    */
   getKey() {
     return String(this.#pocketKey)
-  }
-
-  /**
-   * Returns array of keys for a 'Pocket' namespace.
-   *
-   * @param {string} pocket namespace prefix, default 'pocket'
-   * @param {boolean} local specify sessionStorage (default) or localStorage
-   * @returns {array} array of Storage keys for the current pocket.
-   */
-  static getAllPocketKeys(pocket = 'pocket', local = false) {
-    const store = local ? window.localStorage : window.sessionStorage;
-
-    const allKeys = Object.keys(store)
-      .map((key) => {
-        return key.startsWith(this.stcl + '.' + pocket) ? key : ''
-      })
-      .filter((e) => {
-        return e
-      });
-
-    return Array.from(allKeys)
   }
 
   /**
@@ -191,7 +167,7 @@ class Satchel {
    * @returns {string} the Storage type as a string 'localStorage' or 'SessionStorage'
    */
   static #storageAreaString(store) {
-    return store === localStorage ? 'LocalStorage' : 'SessionStorage'
+    return store === window.localStorage ? 'LocalStorage' : 'SessionStorage'
   }
 
   /**
@@ -219,7 +195,7 @@ class Satchel {
       newValue: null,
       oldValue: null,
       storageArea: null,
-      url: String(window.location.href) || null,
+      url: String(window.location.href),
       action: null
     };
     if (pocketClean) {
@@ -228,7 +204,7 @@ class Satchel {
         keysBefore: null,
         keysRemaining: null,
         storageArea: null,
-        url: String(window.location.href) || null,
+        url: String(window.location.href),
         action: null
       };
     }
@@ -251,10 +227,6 @@ class Satchel {
   static emptyPocket(pocket = 'pocket', local = false) {
     const store = local ? window.localStorage : window.sessionStorage;
     const keysBefore = Satchel.getAllPocketKeys(pocket, local);
-    if (!keysBefore.length) {
-      console.warn('No pocket keys found for ' + pocket + ' in ' + store);
-      return keysBefore
-    }
 
     Object.keys(keysBefore).forEach((key) => {
       store.removeItem(keysBefore[key]);
@@ -276,6 +248,52 @@ class Satchel {
   }
 
   /**
+   * Returns array of keys for a 'Pocket' namespace.
+   *
+   * @param {string} pocket namespace prefix, default 'pocket'
+   * @param {boolean} local specify sessionStorage (default) or localStorage
+   * @returns {array} array of Storage keys for the current pocket.
+   */
+  static getAllPocketKeys(pocket = 'pocket', local = false) {
+    const store = local ? window.localStorage : window.sessionStorage;
+
+    const allKeys = Object.keys(store)
+      .map((key) => {
+        return key.startsWith(this.stcl + '.' + pocket) ? key : ''
+      })
+      .filter((e) => {
+        return e
+      });
+
+    return Array.from(allKeys)
+  }
+
+  /**
+   * Returns an instance of Satchel associated with the given key, pocket,store, or false if none is found.
+   *
+   * @param {string} key key for the stored item
+   * @param {string} [pocket='pocket'] namespace prefix, default 'pocket'
+   * @param {string} [local='false'] specify sessionStorage (default) or localStorage
+   * @returns {Satchel|false} new Satchel instance | false
+   */
+  static getSatchel(key, pocket = 'pocket', local = false) {
+    if (!key) throw new Error('Satchel: a "key" is required.')
+    if (typeof key !== 'string')
+      throw new Error('Satchel: "key" must be a string.')
+    if (typeof pocket !== 'string')
+      throw new Error('Satchel: "pocket" must be an string.')
+    if (typeof local !== 'boolean')
+      throw new Error('Satchel: local must be a boolean.')
+
+    const pocketKey = `${Satchel.stcl}.${pocket}.${key}`;
+    const store = local ? window.localStorage : window.sessionStorage;
+    let item = JSON.parse(store.getItem(pocketKey));
+    if (!item || item.length === 0) return false
+
+    return new Satchel(key, item, local, pocket)
+  }
+
+  /**
    *  Removes all expired items from a given 'pocket' namespace
    *
    * @param {string} pocket namespace prefix, default 'pocket'
@@ -283,7 +301,7 @@ class Satchel {
    * @returns The number of items remaing in store that have yet to expire.
    */
   static tidyPocket(pocket = 'pocket', local = false) {
-    const store = local ? localStorage : sessionStorage;
+    const store = local ? window.localStorage : window.sessionStorage;
     const keysBefore = Satchel.getAllPocketKeys(pocket, local);
     if (!keysBefore.length) return null
 
@@ -305,31 +323,6 @@ class Satchel {
       true
     );
     return keysRemaining
-  }
-
-  /**
-   * Returns an instance of Satchel associated with the given key, pocket,store, or false if none is found.
-   *
-   * @param {string} key key for the stored item
-   * @param {string} [pocket='pocket'] namespace prefix, default 'pocket'
-   * @param {string} [local='false'] specify sessionStorage (default) or localStorage
-   * @returns {Satchel|false} new Satchel instance | false
-   */
-  static getSatchel(key, pocket = 'pocket', local = false) {
-    if (!key) throw new Error('Satchel: a key is required.')
-    if (typeof key !== 'string')
-      throw new Error('Satchel: key must be a string')
-    if (typeof pocket !== 'string')
-      throw new Error('Satchel: pocket must be an string')
-    if (typeof local !== 'boolean')
-      throw new Error('Satchel: local must be true or false')
-
-    const pocketKey = `${Satchel.stcl}.${pocket}.${key}`;
-    const store = local ? localStorage : sessionStorage;
-    const item = JSON.parse(store.getItem(pocketKey));
-    if (!item) return false
-
-    return new Satchel(key, item, local, pocket)
   }
 }
 
