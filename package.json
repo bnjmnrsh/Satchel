@@ -30,7 +30,9 @@
     ],
     "testEnvironment": "jsdom",
     "coverageReporters": [
-      "json-summary"
+      "json-summary",
+      "text-summary",
+      "html"
     ],
     "collectCoverageFrom": [
       "./src/*.{js,jsx,ts}",
