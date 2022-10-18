@@ -12,19 +12,9 @@ describe('Satchel: Tests realated to instantiation', () => {
     expect(() => new Satchel()).toThrow(new Error(ERROR_MESSAGE))
   })
 
-  test('Satchel.getSatchel() should throw an error if a key not set.', () => {
-    const ERROR_MESSAGE = 'Satchel: a "key" is required.'
-    expect(() => Satchel.getSatchel()).toThrow(new Error(ERROR_MESSAGE))
-  })
-
   test('Satchel should throw an error if a key not a string.', () => {
     const ERROR_MESSAGE = 'Satchel: "key" must be a string.'
     expect(() => new Satchel(42)).toThrow(new Error(ERROR_MESSAGE))
-  })
-
-  test('Satchel.getSatchel() should throw an error if a key not a string.', () => {
-    const ERROR_MESSAGE = 'Satchel: "key" must be a string.'
-    expect(() => Satchel.getSatchel(42)).toThrow(new Error(ERROR_MESSAGE))
   })
 
   test('Satchel should throw an error if cargo is not an object.', () => {
@@ -35,13 +25,6 @@ describe('Satchel: Tests realated to instantiation', () => {
   test('Satchel should throw an error if the localStore parameter is not a boolian.', () => {
     const ERROR_MESSAGE = 'Satchel: local must be a boolean.'
     expect(() => new Satchel('taco', null, null)).toThrow(
-      new Error(ERROR_MESSAGE)
-    )
-  })
-
-  test('Satchel.getSatchel() should throw an error if the localStore parameter is not a boolian.', () => {
-    const ERROR_MESSAGE = 'Satchel: local must be a boolean.'
-    expect(() => Satchel.getSatchel('taco', 'pocket', null)).toThrow(
       new Error(ERROR_MESSAGE)
     )
   })
@@ -83,23 +66,7 @@ describe('Satchel: Tests realated to instantiation', () => {
     expect(chicken.getKey()).toBe('stcl.tacos.chicken')
   })
 
-  test('Satchel: instantiate a localStorage entry', () => {
-    localStorage.clear()
-    sessionStorage.clear()
-    const taco1 = new Satchel('taco', { data: null, expiry: null }, true) // localStorage
-    expect(sessionStorage.length).toEqual(0)
-    expect(localStorage.length).toEqual(1)
-  })
-
-  test('Satchel: instantiate a sessionStorage entry', () => {
-    localStorage.clear()
-    sessionStorage.clear()
-    const taco1 = new Satchel('taco', { data: null, expiry: null }, false) // sessionStorage
-    expect(sessionStorage.length).toEqual(1)
-    expect(localStorage.length).toEqual(0)
-  })
-
-  test('Satchel: instantiate localStore and sessionStore entries.', () => {
+  test('Instantiate seperate localStore and sessionStore entries.', () => {
     localStorage.clear()
     sessionStorage.clear()
     const localTaco = new Satchel('taco', { data: null, expiry: null }, true) // localStorage
@@ -107,54 +74,5 @@ describe('Satchel: Tests realated to instantiation', () => {
 
     expect(sessionStorage.length).toEqual(1)
     expect(localStorage.length).toEqual(1)
-  })
-
-  test('Satchel.set() thow error when attempting to set a key that already exsists.', () => {
-    const ERROR_MESSAGE =
-      'Satchel: The key ("stcl.pocket.taco") already exists in SessionStorage, and "data" and "expiry" atributes have not been set, set these or create a new unique key.'
-
-    try {
-      const taco1 = new Satchel('taco')
-      const taco2 = new Satchel('taco')
-    } catch (e) {
-      expect(e.message).toBe(ERROR_MESSAGE)
-    }
-  })
-
-  test('Satchel.set() throw error when trying to set anything other then a string or an object to cargo.data.', () => {
-    const ERROR_MESSAGE = 'Satchel: Data must be a string or an object.'
-
-    function badTaco() {
-      new Satchel('taco', {
-        data: 42,
-        expiry: null,
-        creation: Date.now()
-      })
-    }
-    expect(() => badTaco()).toThrow(new Error(ERROR_MESSAGE))
-  })
-
-  test('Satchel.getSatchel() should throw an error if result does not have data or expiry attributes.', () => {
-    const ERROR_MESSAGE =
-      'Satchel: The key ("stcl.pocket.taco") already exists in SessionStorage, and "data" and "expiry" atributes have not been set, set these or create a new unique key.'
-    sessionStorage.setItem('stcl.pocket.taco', JSON.stringify({}))
-    expect(() => Satchel.getSatchel('taco')).toThrow(ERROR_MESSAGE)
-  })
-
-  test('Satchel.getSatchel() to create a Satchel object, from a given key, pocket, store', () => {
-    let taco = new Satchel(
-      'taco',
-      { data: 'a tasty treat', expiry: null },
-      true
-    )
-    taco = null
-    const retrievedTaco = Satchel.getSatchel('taco', 'pocket', true)
-    expect(retrievedTaco).toBeInstanceOf(Satchel)
-    expect(retrievedTaco.get()).toHaveProperty('data', 'a tasty treat')
-  })
-
-  test('Satchel.getSatchel() to return false if no object in store', () => {
-    const notThere = Satchel.getSatchel('burrito')
-    expect(notThere).toBe(false)
   })
 })
