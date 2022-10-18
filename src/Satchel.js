@@ -2,6 +2,7 @@
  * A utility library for managaing namespaced sessionStorage and localStorage entries.
  */
 class Satchel {
+  stcl = 'stcl'
   #pocketKey
   #store
   #settings
@@ -159,16 +160,6 @@ class Satchel {
   }
 
   /**
-   * Get the Storage type as a string 'localStorage' or 'sessionStorage'
-   *
-   * @param {object} Storage object
-   * @returns {string} the Storage type as a string 'localStorage' or 'SessionStorage'
-   */
-  static #storageAreaString(store) {
-    return store === window.localStorage ? 'LocalStorage' : 'SessionStorage'
-  }
-
-  /**
    * Emulates the StorageEvent API, which may be preferable for some use cases.
    * https://developer.mozilla.org/en-US/docs/Web/API/StorageEvent
    *
@@ -187,24 +178,14 @@ class Satchel {
    * @property {boolean} [pocketClean = false] Optional flag to indiacte a emptyPocket or tidyPocket opperation.
    * @returns {CustomEvent} CustomEvent
    */
-  static #emit(detail = {}, pocketClean = false) {
-    let required = {
+  static #emit(detail = {}) {
+    const required = {
       key: null,
       newValue: null,
       oldValue: null,
       storageArea: null,
       url: String(window.location.href),
       action: null
-    }
-    if (pocketClean) {
-      required = {
-        pocket: null,
-        keysBefore: null,
-        keysRemaining: null,
-        storageArea: null,
-        url: String(window.location.href),
-        action: null
-      }
     }
     detail = { ...required, ...detail }
     const event = new CustomEvent('Satchel', {
@@ -216,54 +197,13 @@ class Satchel {
   }
 
   /**
-   * Clears all items regardless of freshness from a given 'pocket' namespace
+   * Get the Storage type as a string 'localStorage' or 'sessionStorage'
    *
-   * @param {string} pocket namespace prefix, default 'pocket'
-   * @param {boolean} local specify sessionStorage (default) or localStorage
-   * @returns {array} The number of items remaing in store, which if sucessful should be 0.
+   * @param {object} Storage object
+   * @returns {string} the Storage type as a string 'localStorage' or 'SessionStorage'
    */
-  static emptyPocket(pocket = 'pocket', local = false) {
-    const store = local ? window.localStorage : window.sessionStorage
-    const keysBefore = Satchel.getAllPocketKeys(pocket, local)
-
-    Object.keys(keysBefore).forEach((key) => {
-      store.removeItem(keysBefore[key])
-    })
-    const keysRemaining = Satchel.getAllPocketKeys(pocket, local).length
-
-    Satchel.#emit(
-      {
-        pocket: pocket,
-        keysBefore: keysBefore.length,
-        keysRemaining,
-        storageArea: Satchel.#storageAreaString(store),
-        action: 'emptyPocket'
-      },
-      true
-    )
-
-    return keysRemaining
-  }
-
-  /**
-   * Returns array of keys for a 'Pocket' namespace.
-   *
-   * @param {string} pocket namespace prefix, default 'pocket'
-   * @param {boolean} local specify sessionStorage (default) or localStorage
-   * @returns {array} array of Storage keys for the current pocket.
-   */
-  static getAllPocketKeys(pocket = 'pocket', local = false) {
-    const store = local ? window.localStorage : window.sessionStorage
-
-    const allKeys = Object.keys(store)
-      .map((key) => {
-        return key.startsWith(this.stcl + '.' + pocket) ? key : ''
-      })
-      .filter((e) => {
-        return e
-      })
-
-    return Array.from(allKeys)
+  static #storageAreaString(store) {
+    return store === window.localStorage ? 'LocalStorage' : 'SessionStorage'
   }
 
   /**
@@ -274,7 +214,7 @@ class Satchel {
    * @param {string} [local='false'] specify sessionStorage (default) or localStorage
    * @returns {Satchel|false} new Satchel instance | false
    */
-  static getSatchel(key, pocket = 'pocket', local = false) {
+  static getSatchel(key, local = false, pocket = 'pocket') {
     if (!key) throw new Error('Satchel: a "key" is required.')
     if (typeof key !== 'string')
       throw new Error('Satchel: "key" must be a string.')
@@ -290,39 +230,7 @@ class Satchel {
 
     return new Satchel(key, item, local, pocket)
   }
-
-  /**
-   *  Removes all expired items from a given 'pocket' namespace
-   *
-   * @param {string} pocket namespace prefix, default 'pocket'
-   * @param {boolean} local specify sessionStorage (default) or localStorage
-   * @returns The number of items remaing in store that have yet to expire.
-   */
-  static tidyPocket(pocket = 'pocket', local = false) {
-    const store = local ? window.localStorage : window.sessionStorage
-    const keysBefore = Satchel.getAllPocketKeys(pocket, local)
-    if (!keysBefore.length) return null
-
-    Object.keys(keysBefore).forEach((key) => {
-      const expiry = JSON.parse(store.getItem(keysBefore[key])).expiry
-      if (!expiry || expiry - Date.now() > 0) return null
-      store.removeItem(keysBefore[key])
-    })
-    const keysRemaining = Satchel.getAllPocketKeys(pocket, local).length
-
-    Satchel.#emit(
-      {
-        pocket: String(pocket),
-        keysBefore: Number(keysBefore.length),
-        keysRemaining: Number(keysRemaining),
-        storageArea: String(Satchel.#storageAreaString(store)),
-        action: 'tidyPocket'
-      },
-      true
-    )
-    return keysRemaining
-  }
 }
 
-Satchel.stcl = 'stcl'
 export { Satchel }
+export { emptyPocket, tidyPocket, getAllPocketKeys } from './extras'
