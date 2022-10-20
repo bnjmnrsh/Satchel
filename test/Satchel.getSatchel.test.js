@@ -8,17 +8,17 @@ describe('Satchel: Tests realated to Satchel.getSatchel()', () => {
   })
 
   test('Satchel.getSatchel() should throw if a key not set.', () => {
-    const ERROR_MESSAGE = 'Satchel: a "key" is required.'
+    const ERROR_MESSAGE = 'Satchel.getSatchel(): a "key" is required.'
     expect(() => Satchel.getSatchel()).toThrow(new Error(ERROR_MESSAGE))
   })
 
   test('Satchel.getSatchel() should throw if a key not a string.', () => {
-    const ERROR_MESSAGE = 'Satchel: "key" must be a string.'
+    const ERROR_MESSAGE = 'Satchel.getSatchel(): "key" must be a string.'
     expect(() => Satchel.getSatchel(42)).toThrow(new Error(ERROR_MESSAGE))
   })
 
   test('Satchel.getSatchel() should throw if the localStore parameter is not a boolian.', () => {
-    const ERROR_MESSAGE = 'Satchel: local must be a boolean.'
+    const ERROR_MESSAGE = 'Satchel.getSatchel(): "local" must be a boolean.'
     expect(() => Satchel.getSatchel('taco', null)).toThrow(
       new Error(ERROR_MESSAGE)
     )

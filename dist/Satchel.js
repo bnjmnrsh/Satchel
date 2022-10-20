@@ -278,13 +278,13 @@ class Satchel {
    * @returns {Satchel|false} new Satchel instance | false
    */
   static getSatchel(key, local = false, pocket = 'pocket') {
-    if (!key) throw new Error('Satchel: a "key" is required.')
+    if (!key) throw new Error('Satchel.getSatchel(): a "key" is required.')
     if (typeof key !== 'string')
       throw new Error('Satchel: "key" must be a string.')
     if (typeof pocket !== 'string')
-      throw new Error('Satchel: "pocket" must be an string.')
+      throw new Error('Satchel.getSatchel(): "pocket" must be an string.')
     if (typeof local !== 'boolean')
-      throw new Error('Satchel: local must be a boolean.')
+      throw new Error('Satchel.getSatchel(): "local" must be a boolean.')
 
     const pocketKey = `${this.stcl}.${pocket}.${key}`;
     const store = local ? window.localStorage : window.sessionStorage;
