@@ -286,7 +286,7 @@ class Satchel {
     if (typeof local !== 'boolean')
       throw new Error('Satchel: local must be a boolean.')
 
-    const pocketKey = `${Satchel.stcl}.${pocket}.${key}`;
+    const pocketKey = `${this.stcl}.${pocket}.${key}`;
     const store = local ? window.localStorage : window.sessionStorage;
     let item = JSON.parse(store.getItem(pocketKey));
     if (!item || item.length === 0) return false
