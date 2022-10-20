@@ -277,7 +277,7 @@ class Satchel {
    * @param {string} [local='false'] specify sessionStorage (default) or localStorage
    * @returns {Satchel|false} new Satchel instance | false
    */
-  static getSatchel(key, pocket = 'pocket', local = false) {
+  static getSatchel(key, local = false, pocket = 'pocket') {
     if (!key) throw new Error('Satchel: a "key" is required.')
     if (typeof key !== 'string')
       throw new Error('Satchel: "key" must be a string.')

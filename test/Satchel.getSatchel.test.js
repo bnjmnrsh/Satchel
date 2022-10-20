@@ -19,7 +19,7 @@ describe('Satchel: Tests realated to Satchel.getSatchel()', () => {
 
   test('Satchel.getSatchel() should throw if the localStore parameter is not a boolian.', () => {
     const ERROR_MESSAGE = 'Satchel: local must be a boolean.'
-    expect(() => Satchel.getSatchel('taco', 'pocket', null)).toThrow(
+    expect(() => Satchel.getSatchel('taco', null)).toThrow(
       new Error(ERROR_MESSAGE)
     )
   })
@@ -38,7 +38,7 @@ describe('Satchel: Tests realated to Satchel.getSatchel()', () => {
       true
     )
     taco = null
-    const retrievedTaco = Satchel.getSatchel('taco', 'pocket', true)
+    const retrievedTaco = Satchel.getSatchel('taco', true, 'pocket')
     expect(retrievedTaco).toBeInstanceOf(Satchel)
     expect(retrievedTaco.get()).toHaveProperty('data', 'a tasty treat')
   })
