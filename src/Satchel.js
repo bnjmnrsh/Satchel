@@ -19,17 +19,23 @@ class Satchel {
    */
   constructor(key = null, cargo = {}, local = false, pocket = 'pocket') {
     this.#store = local ? window.localStorage : window.sessionStorage
-    if (!key) throw new Error('Satchel: a "key" is required.')
-    if (typeof key !== 'string')
+    if (!key) {
+      throw new Error('Satchel: a "key" is required.')
+    }
+    if (typeof key !== 'string') {
       throw new Error('Satchel: "key" must be a string.')
-    if (typeof cargo !== 'object')
+    }
+    if (typeof cargo !== 'object') {
       throw new Error('Satchel: {cargo} must be an object.')
-    if (typeof local !== 'boolean')
-      throw new Error('Satchel: local must be a boolean.')
-    if (typeof pocket !== 'string')
-      throw new Error('Satchel: "pocket" must be an string.')
+    }
+    if (typeof local !== 'boolean') {
+      throw new Error('Satchel: "local" must be a boolean.')
+    }
+    if (typeof pocket !== 'string') {
+      throw new Error('Satchel: "pocket" must be a string.')
+    }
 
-    this.stcl = Satchel.stcl
+    // this.stcl = Satchel.stcl
     this.#pocketKey = `${this.stcl}.${pocket}.${key}`
     this.#settings = { data: undefined, expiry: null }
 
@@ -104,10 +110,19 @@ class Satchel {
    */
   set({ data, expiry }) {
     if (typeof expiry !== 'number' && expiry !== null) {
-      throw new Error('Satchel: Expiry must be null or a number.')
+      throw new Error(
+        'Satchel.set() {expiry}, expiry must be null or a number.'
+      )
     }
     if (data && typeof data !== 'string' && typeof data !== 'object') {
-      throw new Error('Satchel: Data must be a string or an object.')
+      throw new Error(
+        'Satchel.set({data}): data must be a string or an object.'
+      )
+      if (!JSON.parse(JSON.stringify(data))) {
+        throw new Error(
+          'Satchel.set({data}): data must be a serializable object or a string.'
+        )
+      }
     }
     const storedEntry = this.get(true)
     const temp = {}
@@ -223,7 +238,7 @@ class Satchel {
     if (typeof local !== 'boolean')
       throw new Error('Satchel: local must be a boolean.')
 
-    const pocketKey = `${Satchel.stcl}.${pocket}.${key}`
+    const pocketKey = `${this.stcl}.${pocket}.${key}`
     const store = local ? window.localStorage : window.sessionStorage
     let item = JSON.parse(store.getItem(pocketKey))
     if (!item || item.length === 0) return false
