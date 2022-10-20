@@ -4,6 +4,7 @@
  * A utility library for managaing namespaced sessionStorage and localStorage entries.
  */
 class Satchel {
+  stcl = 'stcl'
   #pocketKey
   #store
   #settings
