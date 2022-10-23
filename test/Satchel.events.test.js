@@ -14,7 +14,7 @@
   like timestamps), from within jest.fn() before it returns.
 */
 
-import { Satchel } from '../src/Satchel'
+import { Satchel, emptyPocket, tidyPocket } from '../src/Satchel'
 import { expect, jest, test, describe } from '@jest/globals'
 
 describe('Satchel: testing custom events', () => {
