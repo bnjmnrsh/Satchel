@@ -8,7 +8,7 @@
     "build": "rollup --config",
     "watch": "rollup --config --watch",
     "test-ci": "node --experimental-vm-modules  ./node_modules/.bin/jest --coverage --ci",
-    "testing": "node --experimental-vm-modules  ./node_modules/.bin/jest --coverage --watch"
+    "testing": "node --experimental-vm-modules  ./node_modules/.bin/jest --coverage --watch --verbose false"
   },
   "author": "bnjmnrsh",
   "license": "ISC",
