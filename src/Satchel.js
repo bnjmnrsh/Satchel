@@ -239,4 +239,4 @@ class Satchel {
 }
 
 export { Satchel }
-export { emptyPocket, tidyPocket, getAllPocketKeys } from './extras'
+export { emptyPocket, tidyPocket, getAllPocketKeys } from './bindle'
