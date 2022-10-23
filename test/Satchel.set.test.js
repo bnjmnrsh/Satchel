@@ -38,7 +38,8 @@ describe('Satchel: Test Satchel.set()', () => {
   })
 
   test('Satchel.set() throw error when trying to set anything other then a string or an object to cargo.data.', () => {
-    const ERROR_MESSAGE = 'Satchel: Data must be a string or an object.'
+    const ERROR_MESSAGE =
+      'Satchel.set({data}): "data" must be a string or an object.'
 
     function badTaco() {
       new Satchel('taco', {
