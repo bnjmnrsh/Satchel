@@ -2,7 +2,7 @@
  * A utility library for managaing namespaced sessionStorage and localStorage entries.
  */
 class Satchel {
-  stcl = 'stcl'
+  static _stcl
   #pocketKey
   #store
   #settings
@@ -35,14 +35,37 @@ class Satchel {
       throw new Error('Satchel: "pocket" must be a string.')
     }
 
-    // this.stcl = Satchel.stcl
-    this.#pocketKey = `${this.stcl}.${pocket}.${key}`
+    this.#pocketKey = `${Satchel.stcl}.${pocket}.${key}`
     this.#settings = { data: undefined, expiry: null }
 
     cargo = { ...this.#settings, ...cargo }
 
     // Set the cargo to Storage
     this.set(cargo)
+  }
+
+  /**
+   * Setter for Satchel.stcl must be a string.
+   *
+   * @static
+   * @memberof Satchel
+   */
+  static set stcl(prefix) {
+    if (typeof prefix !== 'string') {
+      throw new Error('Satchel.stcl must be a string.')
+    }
+    this._stcl = prefix
+  }
+
+  /**
+   * Getter for Satchel.stcl property
+   * Returns the prefix for current Satchel instance, defaulting to 'stcl'.
+   *
+   * @static
+   * @memberof Satchel
+   */
+  static get stcl() {
+    return this._stcl ? this._stcl : 'stcl'
   }
 
   /**
@@ -238,9 +261,9 @@ class Satchel {
       )
     }
 
-    const pocketKey = `${this.stcl}.${pocket}.${key}`
+    const pocketKey = `${Satchel.stcl}.${pocket}.${key}`
     const store = local ? window.localStorage : window.sessionStorage
-    let item = JSON.parse(store.getItem(pocketKey))
+    const item = JSON.parse(store.getItem(pocketKey))
     if (!item || item.length === 0) return false
 
     return new Satchel(key, item, local, pocket)
