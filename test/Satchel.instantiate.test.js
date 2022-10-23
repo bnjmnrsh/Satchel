@@ -23,24 +23,22 @@ describe('Satchel: Tests realated to instantiation', () => {
   })
 
   test('Satchel should throw an error if the localStore parameter is not a boolian.', () => {
-    const ERROR_MESSAGE = 'Satchel: local must be a boolean.'
+    const ERROR_MESSAGE = 'Satchel: "local" must be a boolean.'
     expect(() => new Satchel('taco', null, null)).toThrow(
       new Error(ERROR_MESSAGE)
     )
   })
 
   test('Satchel should throw an error if the "pocket" parameter is not a string.', () => {
-    const ERROR_MESSAGE = 'Satchel: "pocket" must be an string.'
-    expect(() => new Satchel('taco', null, false, 42)).toThrow(
-      new Error(ERROR_MESSAGE)
-    )
-    expect(() => Satchel.getSatchel('taco', null, false, 42)).toThrow(
+    const ERROR_MESSAGE = 'Satchel: "pocket" must be a string.'
+    expect(() => new Satchel('taco', {}, true, 42)).toThrow(
       new Error(ERROR_MESSAGE)
     )
   })
 
   test('Satchel should throw an error if passed anything other then "null" or a numeric value for "expiry"', () => {
-    const ERROR_MESSAGE = 'Satchel: Expiry must be null or a number.'
+    const ERROR_MESSAGE =
+      'Satchel.set({expiry}): "expiry" must be null or a number.'
     function badTacos() {
       new Satchel('bad-tacos', { data: null, expiry: 'guaque' })
     }
@@ -74,5 +72,18 @@ describe('Satchel: Tests realated to instantiation', () => {
 
     expect(sessionStorage.length).toEqual(1)
     expect(localStorage.length).toEqual(1)
+  })
+
+  test('Instantiate Satchel with custom prefix using Satchel.stcl', () => {
+    Satchel.stcl = 'customStcl'
+    const prefixSatchel = new Satchel('custom-taco', {})
+    expect(prefixSatchel.getKey()).toBe('customStcl.pocket.custom-taco')
+  })
+
+  test('Satchel.stcl should throw if not a string', () => {
+    const ERROR_MESSAGE = 'Satchel.stcl must be a string.'
+    expect(() => {
+      Satchel.stcl = [42]
+    }).toThrow(new Error(ERROR_MESSAGE))
   })
 })
