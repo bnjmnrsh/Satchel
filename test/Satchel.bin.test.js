@@ -1,5 +1,4 @@
 import { Satchel } from '../src/Satchel'
-import { getAllPocketKeys } from '../src/extras'
 import { expect, jest, test, describe } from '@jest/globals'
 
 describe('Satchel: testing bin method', () => {
