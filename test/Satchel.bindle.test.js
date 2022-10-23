@@ -1,10 +1,32 @@
-import { Satchel } from '../src/Satchel'
-import { getAllPocketKeys } from '../src/extras'
+import {
+  Satchel,
+  tidyPocket,
+  emptyPocket,
+  getAllPocketKeys
+} from '../src/Satchel'
 import { expect, jest, test, describe } from '@jest/globals'
 
 describe('Satchel: testing pocket cleanup methods exported from extras.js', () => {
   beforeEach(() => {
     sessionStorage.clear()
+  })
+
+  test('Test getAllPocketKeys() to retrieve all keys in a "pocket"', () => {
+    // create non pocket entries
+    ;[...Array(10)].forEach((element, i) =>
+      sessionStorage.setItem(`test-${i}`, 'test')
+    )
+    // create pocket entries
+    ;[...Array(10)].forEach(
+      (element, i) => new Satchel(`test-${i}`, {}, false, 'taco-truck')
+    )
+    const pocketKeys = getAllPocketKeys(false, 'taco-truck')
+    expect(pocketKeys.length).toEqual(10)
+  })
+
+  test('Test getAllPocketKeys to return 0 when no items in pocket', () => {
+    const pocketKeys = getAllPocketKeys(false, 'false-pocket')
+    expect(pocketKeys.length).toEqual(0)
   })
 
   test('Test emptyPocket() to remove all entries from a "pocket"', () => {
@@ -18,7 +40,8 @@ describe('Satchel: testing pocket cleanup methods exported from extras.js', () =
     )
 
     expect(sessionStorage.length).toEqual(20)
-    emptyPocket('taco-truck', false)
+    const empty = emptyPocket(false, 'taco-truck')
+    expect(empty).toEqual([0, 10])
     expect(sessionStorage.length).toEqual(10)
   })
 
@@ -44,14 +67,13 @@ describe('Satchel: testing pocket cleanup methods exported from extras.js', () =
       false,
       'taco-truck'
     )
-
     expect(sessionStorage.length).toEqual(20)
-    tidyPocket('taco-truck', false)
+    const tidy = tidyPocket(false, 'taco-truck')
     expect(sessionStorage.length).toEqual(11)
+    expect(tidy).toStrictEqual([1, 11])
   })
 
   test('Test tidyPocket() to return null when no items to prune', () => {
-    const tidyPocket = tidyPocket()
-    expect(tidyPocket).toBe(null)
+    expect(tidyPocket()).toBe(null)
   })
 })

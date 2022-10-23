@@ -29,12 +29,14 @@
  */
 function emitPocket(detail = {}) {
   const required = {
+    action: null,
+
     pocket: null,
-    keysBefore: null,
-    keysRemaining: null,
+    remainingPocketKeys: null,
+    startingPocketKeys: null,
+    remainingKeysInStore: null,
     storageArea: null,
-    url: String(window.location.href),
-    action: null
+    url: String(window.location.href)
   }
   detail = { ...required, ...detail }
   const event = new CustomEvent('Satchel', {
@@ -62,12 +64,12 @@ function storageAreaString(store) {
  * @param {boolean} local specify sessionStorage (default) or localStorage
  * @returns {array} array of Storage keys for the current pocket.
  */
-function getAllPocketKeys(local = false, pocket = 'pocket') {
+function getAllPocketKeys(local = false, pocket = 'pocket', stcl = 'stcl') {
   const store = local ? window.localStorage : window.sessionStorage
 
   const allKeys = Object.keys(store)
     .map((key) => {
-      return key.startsWith(this.stcl + '.' + pocket) ? key : ''
+      return key.startsWith(stcl + '.' + pocket) ? key : ''
     })
     .filter((e) => {
       return e
@@ -85,27 +87,28 @@ function getAllPocketKeys(local = false, pocket = 'pocket') {
  */
 function tidyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
   const store = local ? window.localStorage : window.sessionStorage
-  const keysBefore = getAllPocketKeys(pocket, local)
-  if (!keysBefore.length) return null
+  const pocketKeys = getAllPocketKeys(local, pocket)
+  if (!pocketKeys.length) return null
 
-  Object.keys(keysBefore).forEach((key) => {
-    const expiry = JSON.parse(store.getItem(keysBefore[key])).expiry
+  Object.keys(pocketKeys).forEach((key) => {
+    const expiry = JSON.parse(store.getItem(pocketKeys[key])).expiry
     if (!expiry || expiry - Date.now() > 0) return null
-    store.removeItem(keysBefore[key])
+    store.removeItem(pocketKeys[key])
   })
-  const keysRemaining = getAllPocketKeys(local, pocket).length
+  const remainingPocketKeys = getAllPocketKeys(local, pocket)
 
   emitPocket(
     {
+      action: 'tidyPocket',
       pocket: String(pocket),
-      keysBefore: Number(keysBefore.length),
-      keysRemaining: Number(keysRemaining),
-      storageArea: String(storageAreaString(store)),
-      action: 'tidyPocket'
+      remainingPocketKeys: getAllPocketKeys(local, pocket).length,
+      startingPocketKeys: Number(pocketKeys.length),
+      remainingKeysInStore: Number(store.length),
+      storageArea: String(storageAreaString(store))
     },
     true
   )
-  return keysRemaining
+  return [remainingPocketKeys.length, store.length]
 }
 
 /**
@@ -117,26 +120,26 @@ function tidyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
  */
 function emptyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
   const store = local ? window.localStorage : window.sessionStorage
-  const keysBefore = getAllPocketKeys(pocket, local)
+  const pocketKeys = getAllPocketKeys(local, pocket)
 
-  Object.keys(keysBefore).forEach((key) => {
-    store.removeItem(keysBefore[key])
+  Object.keys(pocketKeys).forEach((key) => {
+    store.removeItem(pocketKeys[key])
   })
 
-  const keysAfter = getAllPocketKeys(local, pocket)
-  const totalKeysRemaining = store.length
+  const remainingPocketKeys = getAllPocketKeys(local, pocket)
 
   emitPocket(
     {
-      pocket: pocket,
-      keysBefore: keysBefore.length,
-      totalKeysRemaining,
-      storageArea: storageAreaString(store),
-      action: 'emptyPocket'
+      action: 'emptyPocket',
+      pocket: String(pocket),
+      remainingPocketKeys: Number(remainingPocketKeys.length),
+      startingPocketKeys: Number(pocketKeys.length),
+      remainingKeysInStore: Number(store.length),
+      storageArea: String(storageAreaString(store))
     },
     true
   )
-  return [keysBefore, totalKeysRemaining]
+  return [remainingPocketKeys.length, store.length]
 }
 
 export { emptyPocket, tidyPocket, getAllPocketKeys }
