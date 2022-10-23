@@ -25,18 +25,6 @@ describe('Satchel: Test Satchel.set()', () => {
     expect(taco.get(true).creation).toBeLessThanOrEqual(Date.now())
   })
 
-  test('Satchel.set() thow error when attempting to set a key that already exsists.', () => {
-    const ERROR_MESSAGE =
-      'Satchel: The key ("stcl.pocket.taco") already exists in SessionStorage, and "data" and "expiry" atributes have not been set, set these or create a new unique key.'
-
-    try {
-      const taco1 = new Satchel('taco')
-      const taco2 = new Satchel('taco')
-    } catch (e) {
-      expect(e.message).toBe(ERROR_MESSAGE)
-    }
-  })
-
   test('Satchel.set() throw error when trying to set anything other then a string or an object to cargo.data.', () => {
     const ERROR_MESSAGE =
       'Satchel.set({data}): "data" must be a string or an object.'
@@ -44,8 +32,19 @@ describe('Satchel: Test Satchel.set()', () => {
     function badTaco() {
       new Satchel('taco', {
         data: 42,
-        expiry: null,
-        creation: Date.now()
+        expiry: null
+      })
+    }
+    expect(() => badTaco()).toThrow(new Error(ERROR_MESSAGE))
+  })
+
+  test('Satchel.set() throw error when trying to set anything other then a number or null to cargo.expiry.', () => {
+    const ERROR_MESSAGE =
+      'Satchel.set({expiry}): "expiry" must be null or a number.'
+
+    function badTaco() {
+      new Satchel('taco', {
+        expiry: 'bad-taco'
       })
     }
     expect(() => badTaco()).toThrow(new Error(ERROR_MESSAGE))

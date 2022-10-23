@@ -111,16 +111,16 @@ class Satchel {
   set({ data, expiry }) {
     if (typeof expiry !== 'number' && expiry !== null) {
       throw new Error(
-        'Satchel.set() {expiry}, expiry must be null or a number.'
+        'Satchel.set({expiry}): "expiry" must be null or a number.'
       )
     }
     if (data && typeof data !== 'string' && typeof data !== 'object') {
       throw new Error(
-        'Satchel.set({data}): data must be a string or an object.'
+        'Satchel.set({data}): "data" must be a string or an object.'
       )
       if (!JSON.parse(JSON.stringify(data))) {
         throw new Error(
-          'Satchel.set({data}): data must be a serializable object or a string.'
+          'Satchel.set({data}): "data" must be a serializable object or a string.'
         )
       }
     }
@@ -128,15 +128,6 @@ class Satchel {
     const temp = {}
     temp.data = data || null
     temp.expiry = expiry || null
-
-    if (!data && !expiry && storedEntry)
-      throw new Error(
-        `Satchel: The key ("${
-          this.#pocketKey
-        }") already exists in ${Satchel.#storageAreaString(
-          this.#store
-        )}, and "data" and "expiry" atributes have not been set, set these or create a new unique key.`
-      )
 
     // dont overwrite existing creation time
     temp.creation = Number(storedEntry.creation) || Date.now()
