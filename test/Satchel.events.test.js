@@ -81,48 +81,4 @@ describe('Satchel: testing custom events', () => {
     expect(Promise.resolve(fn)).resolves.toHaveLastReturnedWith(expectedReturn)
     removeEventListener('Satchel', fn)
   })
-
-  test('Satchel: Test tidyPocket() custom event', () => {
-    const expectedReturn = {
-      action: 'tidyPocket',
-      pocket: 'pocket',
-      keysBefore: 2,
-      keysRemaining: 1,
-      storageArea: 'SessionStorage',
-      url: null
-    }
-    new Satchel('taco', { data: 'a tasty treat', expiry: null })
-    new Satchel('old-taco', {
-      data: 'a sad mushy plate',
-      expiry: Date.now() - 50000
-    })
-
-    window.addEventListener('Satchel', fn)
-    const tidy = Satchel.tidyPocket()
-    expect(tidy).toBe(1)
-    expect(Promise.resolve(fn)).resolves.toHaveLastReturnedWith(expectedReturn)
-    removeEventListener('Satchel', fn)
-  })
-
-  test('Satchel: Test emptyPocket() custom event', () => {
-    const expectedReturn = {
-      action: 'emptyPocket',
-      pocket: 'pocket',
-      keysBefore: 2,
-      keysRemaining: 0,
-      storageArea: 'SessionStorage',
-      url: null
-    }
-    new Satchel('taco', { data: 'a tasty treat', expiry: null })
-    new Satchel('old-taco', {
-      data: 'a sad mushy plate',
-      expiry: Date.now() - 50000
-    })
-
-    window.addEventListener('Satchel', fn)
-    const empty = Satchel.emptyPocket()
-    expect(empty).toBe(0)
-    expect(Promise.resolve(fn)).resolves.toHaveLastReturnedWith(expectedReturn)
-    removeEventListener('Satchel', fn)
-  })
 })
