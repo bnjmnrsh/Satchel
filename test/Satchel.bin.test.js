@@ -22,7 +22,7 @@ describe('Satchel: testing bin method', () => {
     expect(tacoSession.get(true)).toBe(false)
   })
 
-  test('Satchel: Test bin() to remove a missing record', () => {
+  test('Satchel: Test bin() to try and remove a missing record', () => {
     const noTaco = new Satchel('taco')
     noTaco.bin()
 
