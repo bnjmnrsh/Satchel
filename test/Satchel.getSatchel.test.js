@@ -8,37 +8,34 @@ describe('Satchel: Tests realated to Satchel.getSatchel()', () => {
   })
 
   test('Satchel.getSatchel() should throw if a key not set.', () => {
-    const ERROR_MESSAGE = 'Satchel.getSatchel(): a "key" is required.'
+    const ERROR_MESSAGE = 'Satchel.getSatchel(key): a "key" is required.'
     expect(() => Satchel.getSatchel()).toThrow(new Error(ERROR_MESSAGE))
   })
 
   test('Satchel.getSatchel() should throw if a key not a string.', () => {
-    const ERROR_MESSAGE = 'Satchel.getSatchel(): "key" must be a string.'
+    const ERROR_MESSAGE = 'Satchel.getSatchel(key): "key" must be a string.'
     expect(() => Satchel.getSatchel(42)).toThrow(new Error(ERROR_MESSAGE))
   })
 
   test('Satchel.getSatchel() should throw if the localStore parameter is not a boolian.', () => {
-    const ERROR_MESSAGE = 'Satchel.getSatchel(): "local" must be a boolean.'
+    const ERROR_MESSAGE =
+      'Satchel.getSatchel(key, local): "local" must be a boolean.'
     expect(() => Satchel.getSatchel('taco', null)).toThrow(
       new Error(ERROR_MESSAGE)
     )
   })
 
-  test('Satchel.getSatchel() should throw if result does not have data or expiry attributes.', () => {
+  test('Satchel.getSatchel() should throw if the the pocket parameter is not a string.', () => {
     const ERROR_MESSAGE =
-      'Satchel: The key ("stcl.pocket.taco") already exists in SessionStorage, and "data" and "expiry" atributes have not been set, set these or create a new unique key.'
-    sessionStorage.setItem('stcl.pocket.taco', JSON.stringify({}))
-    expect(() => Satchel.getSatchel('taco')).toThrow(ERROR_MESSAGE)
+      'Satchel.getSatchel(key, local, pocket): "pocket" must be an string.'
+    expect(() => Satchel.getSatchel('taco', true, 42)).toThrow(
+      new Error(ERROR_MESSAGE)
+    )
   })
 
   test('Satchel.getSatchel() to create a Satchel object, from a given key, pocket, store', () => {
-    let taco = new Satchel(
-      'taco',
-      { data: 'a tasty treat', expiry: null },
-      true
-    )
-    taco = null
-    const retrievedTaco = Satchel.getSatchel('taco', true, 'pocket')
+    let taco = new Satchel('taco', { data: 'a tasty treat' })
+    const retrievedTaco = Satchel.getSatchel('taco')
     expect(retrievedTaco).toBeInstanceOf(Satchel)
     expect(retrievedTaco.get()).toHaveProperty('data', 'a tasty treat')
   })
