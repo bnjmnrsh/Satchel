@@ -1,7 +1,7 @@
 
 /* ! @preserve @bnjmnrsh/satchel v0.2.0 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
 /**
- * A utility library for managaing namespaced sessionStorage and localStorage entries.
+ * A utility for managaing the freshness of namespaced sessionStorage and localStorage entries.
  */
 class Satchel {
   static _stcl
@@ -27,7 +27,7 @@ class Satchel {
     if (typeof key !== 'string') {
       throw new Error('Satchel: "key" must be a string.')
     }
-    if (typeof cargo !== 'object') {
+    if (!this.#isObject(cargo)) {
       throw new Error('Satchel: {cargo} must be an object.')
     }
     if (typeof local !== 'boolean') {
@@ -60,7 +60,7 @@ class Satchel {
   }
 
   /**
-   * Getter for Satchel.stcl property
+   * Getter for the Satchel.stcl property.
    * Returns the prefix for current Satchel instance, defaulting to 'stcl'.
    *
    * @static
@@ -124,14 +124,14 @@ class Satchel {
   }
 
   /**
-   * Sets the data, for a given key and namespace
+   * Sets the cargo object for a given key and namespace.
    *
    * @param {object} settings object
    * @property {object|string} data the Storage object to set
    * @property {number|null} expiry the expiery date in (ms)
    * @property {number} creation the creation date in (ms) Date.now()
    *
-   * @return {object} Satchel
+   * @return {Satchel} Satchel
    */
   set({ data, expiry }) {
     if (typeof expiry !== 'number' && expiry !== null) {
@@ -139,12 +139,12 @@ class Satchel {
         'Satchel.set({expiry}): "expiry" must be null or a number.'
       )
     }
-    if (data && typeof data !== 'string' && typeof data !== 'object') {
+    if (data && typeof data !== 'string' && !this.#isObject(data)) {
       throw new Error(
         'Satchel.set({data}): "data" must be a string or an object.'
       )
     }
-    if (data && typeof data === 'object') {
+    if (data && this.#isObject(data)) {
       try {
         JSON.parse(JSON.stringify(data));
       } catch (e) {
@@ -230,13 +230,23 @@ class Satchel {
   }
 
   /**
-   * Get the Storage type as a string 'localStorage' or 'sessionStorage'
+   * Get the Storage type as a string: 'localStorage' or 'sessionStorage'.
    *
    * @param {object} Storage object
    * @returns {string} the Storage type as a string 'localStorage' or 'SessionStorage'
    */
   static #storageAreaString(store) {
     return store === window.localStorage ? 'LocalStorage' : 'SessionStorage'
+  }
+
+  /**
+   * Test if a value is an interable object.
+   *
+   * @param {*} doesit the value to be checked
+   * @returns
+   */
+  #isObject(doesit) {
+    return doesit && typeof doesit === 'object' && doesit.constructor === Object
   }
 
   /**
