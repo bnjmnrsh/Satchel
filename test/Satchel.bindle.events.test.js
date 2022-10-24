@@ -2,7 +2,8 @@
   See notes within events.test.js for details.
 */
 
-import { Satchel, tidyPocket, emptyPocket } from '../src/Satchel'
+import { Satchel } from '../src/Satchel'
+import { emptyPocket, tidyPocket, getAllPocketKeys } from '../src/bindle'
 import { expect, jest, test, describe } from '@jest/globals'
 
 describe('Satchel: testing custom events coming from extras.', () => {

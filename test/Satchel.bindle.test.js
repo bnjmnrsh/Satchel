@@ -1,9 +1,5 @@
-import {
-  Satchel,
-  tidyPocket,
-  emptyPocket,
-  getAllPocketKeys
-} from '../src/Satchel'
+import { Satchel } from '../src/Satchel'
+import { emptyPocket, tidyPocket, getAllPocketKeys } from '../src/bindle'
 import { expect, jest, test, describe } from '@jest/globals'
 
 describe('Satchel: testing pocket cleanup methods exported from extras.js', () => {
