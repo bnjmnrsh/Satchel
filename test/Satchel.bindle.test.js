@@ -53,6 +53,10 @@ describe('Satchel: testing pocket cleanup methods exported from extras.js', () =
     expect(sessionStorage.length).toEqual(10)
   })
 
+  test('Test emptyPocket() to return null when no items found for a "pocket"', () => {
+    expect(emptyPocket()).toBe(null)
+  })
+
   test('Test tidyPocket() to remove a stale entry from a "pocket"', () => {
     // create non pocket entries
     ;[...Array(10)].forEach((element, i) =>
