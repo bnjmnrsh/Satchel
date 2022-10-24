@@ -6,8 +6,8 @@ import { babel } from '@rollup/plugin-babel'
 // Configs
 const configs = {
   name: pkg.name,
-  files: ['Satchel.js'],
-  formats: ['iife', 'es'], //, 'es', 'amd', 'cjs'
+  files: ['Satchel.js', 'bindle.js'],
+  formats: ['es'], //, 'es', 'amd', 'cjs'
   default: 'es',
   pathIn: 'src/',
   pathOut: 'dist/',

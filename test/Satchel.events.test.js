@@ -4,9 +4,9 @@
   https://ilikekillnerds.com/2020/02/testing-event-listeners-in-jest-without-using-a-library/
 
   We can, however, use jest-environment-jsdom to listen for CustomEvents on the window.
-  We can then use just.fn() to mock the event response instead. In this case, our event payload
+  We can then use jest.fn() to mock the event response instead. In this case, our event payload
   includes timestamps which presents a challenge, because after unwinding the returned Promise,
-  Jest does not provide methods for easy testing individual property values, like we can with
+  Jest does not provide methods for easy testing of individual property values, like we can with
   `expect.objectContaining()`. Instead, we need to work with `.resolves.toReturnWith()`
   to access the Promise response, and so we must test against a preconfigured object.
   Because we can't choose which properties within the promise response to test,
@@ -78,50 +78,6 @@ describe('Satchel: testing custom events', () => {
     const mySatchel = new Satchel('taco', { data: 'a tasty treat' })
     window.addEventListener('Satchel', fn)
     mySatchel.bin()
-    expect(Promise.resolve(fn)).resolves.toHaveLastReturnedWith(expectedReturn)
-    removeEventListener('Satchel', fn)
-  })
-
-  test('Satchel: Test tidyPocket() custom event', () => {
-    const expectedReturn = {
-      action: 'tidyPocket',
-      pocket: 'pocket',
-      keysBefore: 2,
-      keysRemaining: 1,
-      storageArea: 'SessionStorage',
-      url: null
-    }
-    new Satchel('taco', { data: 'a tasty treat', expiry: null })
-    new Satchel('old-taco', {
-      data: 'a sad mushy plate',
-      expiry: Date.now() - 50000
-    })
-
-    window.addEventListener('Satchel', fn)
-    const tidy = Satchel.tidyPocket()
-    expect(tidy).toBe(1)
-    expect(Promise.resolve(fn)).resolves.toHaveLastReturnedWith(expectedReturn)
-    removeEventListener('Satchel', fn)
-  })
-
-  test('Satchel: Test emptyPocket() custom event', () => {
-    const expectedReturn = {
-      action: 'emptyPocket',
-      pocket: 'pocket',
-      keysBefore: 2,
-      keysRemaining: 0,
-      storageArea: 'SessionStorage',
-      url: null
-    }
-    new Satchel('taco', { data: 'a tasty treat', expiry: null })
-    new Satchel('old-taco', {
-      data: 'a sad mushy plate',
-      expiry: Date.now() - 50000
-    })
-
-    window.addEventListener('Satchel', fn)
-    const empty = Satchel.emptyPocket()
-    expect(empty).toBe(0)
     expect(Promise.resolve(fn)).resolves.toHaveLastReturnedWith(expectedReturn)
     removeEventListener('Satchel', fn)
   })
