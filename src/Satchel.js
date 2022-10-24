@@ -129,7 +129,7 @@ class Satchel {
    * @property {number|null} expiry the expiery date in (ms)
    * @property {number} creation the creation date in (ms) Date.now()
    *
-   * @return {object} Satchel
+   * @return {Satchel} Satchel
    */
   set({ data, expiry }) {
     if (typeof expiry !== 'number' && expiry !== null) {
