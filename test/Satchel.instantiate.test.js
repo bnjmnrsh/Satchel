@@ -24,7 +24,7 @@ describe('Satchel: Tests realated to instantiation', () => {
 
   test('Satchel should throw an error if the localStore parameter is not a boolian.', () => {
     const ERROR_MESSAGE = 'Satchel: "local" must be a boolean.'
-    expect(() => new Satchel('taco', null, null)).toThrow(
+    expect(() => new Satchel('taco', {}, null)).toThrow(
       new Error(ERROR_MESSAGE)
     )
   })
