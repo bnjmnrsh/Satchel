@@ -25,7 +25,7 @@ class Satchel {
     if (typeof key !== 'string') {
       throw new Error('Satchel: "key" must be a string.')
     }
-    if (typeof cargo !== 'object') {
+    if (!this.#isObject(cargo)) {
       throw new Error('Satchel: {cargo} must be an object.')
     }
     if (typeof local !== 'boolean') {
@@ -137,12 +137,12 @@ class Satchel {
         'Satchel.set({expiry}): "expiry" must be null or a number.'
       )
     }
-    if (data && typeof data !== 'string' && typeof data !== 'object') {
+    if (data && typeof data !== 'string' && !this.#isObject(data)) {
       throw new Error(
         'Satchel.set({data}): "data" must be a string or an object.'
       )
     }
-    if (data && typeof data === 'object') {
+    if (data && this.#isObject(data)) {
       try {
         JSON.parse(JSON.stringify(data))
       } catch (e) {
@@ -235,6 +235,16 @@ class Satchel {
    */
   static #storageAreaString(store) {
     return store === window.localStorage ? 'LocalStorage' : 'SessionStorage'
+  }
+
+  /**
+   * Test if a value is an interable object.
+   *
+   * @param {*} doesit the value to be checked
+   * @returns
+   */
+  #isObject(doesit) {
+    return doesit && typeof doesit === 'object' && doesit.constructor === Object
   }
 
   /**
