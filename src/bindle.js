@@ -1,21 +1,4 @@
 /**
- * I've swapped the parm order for getAllPocketKeys, tidyPocket and emptyPocket.
- * The tests in this branch have not yet been updated to reflect this.
- *
- * The approach below is a dead end, because tidyPocket and emptyPocket both rely on
- * getAllPocketKeys that in turn relies on the Satchel.stcl param, which is really just a prefix.
- *
- * If it is, the either we need to:
- *  - pass Satchel.stcl to each function (possibly as an optional third param)
- *  - or extend the Satchel instance and bundle these with that extended Class, using super to carry over this.stchl.
- *
- * Passing the Satchel instance to each function, isn't so bad so long as it's optional.
- * However extending the Satchel class will ultimately result in an even larger bundle, as you can't just import only the bits you want.
- *
- *  Is the extra namespaceing of Satchel.stcl really needed?
- */
-
-/**
  * Emit custom event for Satchel pocket opperations.
  *
  * @param {object} detail Event details
