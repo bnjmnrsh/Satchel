@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>29/29</span>
+                <span class='fraction'>31/31</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.07% </span>
+                <span class="strong">78.57% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/26</span>
+                <span class='fraction'>22/28</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>27/27</span>
+                <span class='fraction'>28/28</span>
             </div>
         
             
@@ -195,7 +195,8 @@
 <a name='L130'></a><a href='#L130'>130</a>
 <a name='L131'></a><a href='#L131'>131</a>
 <a name='L132'></a><a href='#L132'>132</a>
-<a name='L133'></a><a href='#L133'>133</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -249,17 +250,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">100x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">100x</span>
+<span class="cline-any cline-yes">110x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">110x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -303,8 +304,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">12x</span>
@@ -364,7 +366,7 @@ function emitPocket(detail = <span class="branch-0 cbranch-no" title="branch not
 }
 &nbsp;
 /**
- * Get the Storage type as a string 'localStorage' or 'sessionStorage'
+ * Get the Storage type as a string 'localStorage' or 'sessionStorage'.
  *
  * @param {object} Storage object
  * @returns {string} the Storage type as a string 'localStorage' or 'SessionStorage'
@@ -381,7 +383,7 @@ function storageAreaString(store) {
  * @returns {array} array of Storage keys for the current pocket.
  */
 function getAllPocketKeys(local = <span class="branch-0 cbranch-no" title="branch not covered" >false,</span> pocket = <span class="branch-0 cbranch-no" title="branch not covered" >'pocket',</span> stcl = 'stcl') {
-  const store = local ? <span class="branch-0 cbranch-no" title="branch not covered" >window.localStorage </span>: window.sessionStorage
+  const store = local ? window.localStorage : window.sessionStorage
 &nbsp;
   const allKeys = Object.keys(store)
     .map((key) =&gt; {
@@ -395,7 +397,7 @@ function getAllPocketKeys(local = <span class="branch-0 cbranch-no" title="branc
 }
 &nbsp;
 /**
- *  Removes all expired items from a given 'pocket' namespace
+ *  Removes all expired items from a given 'pocket' namespace.
  *
  * @param {string} pocket namespace prefix, default 'pocket'
  * @param {boolean} local specify sessionStorage (default) or localStorage
@@ -403,7 +405,7 @@ function getAllPocketKeys(local = <span class="branch-0 cbranch-no" title="branc
  */
 function tidyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
   const store = local ? <span class="branch-0 cbranch-no" title="branch not covered" >window.localStorage </span>: window.sessionStorage
-  const pocketKeys = getAllPocketKeys(local, pocket)
+  const pocketKeys = getAllPocketKeys(local, pocket, stcl)
   if (!pocketKeys.length) return null
 &nbsp;
   Object.keys(pocketKeys).forEach((key) =&gt; {
@@ -417,7 +419,7 @@ function tidyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
     {
       action: 'tidyPocket',
       pocket: String(pocket),
-      remainingPocketKeys: getAllPocketKeys(local, pocket).length,
+      remainingPocketKeys: getAllPocketKeys(local, pocket, stcl).length,
       startingPocketKeys: Number(pocketKeys.length),
       remainingKeysInStore: Number(store.length),
       storageArea: String(storageAreaString(store))
@@ -428,21 +430,22 @@ function tidyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
 }
 &nbsp;
 /**
- * Clears all items regardless of freshness from a given 'pocket' namespace
+ * Clears all items regardless of freshness from a given 'pocket' namespace.
  *
  * @param {boolean} local specify sessionStorage (default) or localStorage
  * @param {string} pocket namespace prefix, default 'pocket'
- * @returns {array} The number of poket keys remaing in store, which if sucessful should be 0.
+ * @returns {array|null} The number of pocket-keys remaing in store, which if sucessful should be [0, store.length].
  */
 function emptyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
   const store = local ? <span class="branch-0 cbranch-no" title="branch not covered" >window.localStorage </span>: window.sessionStorage
-  const pocketKeys = getAllPocketKeys(local, pocket)
+  const pocketKeys = getAllPocketKeys(local, pocket, stcl)
+  if (!pocketKeys.length) return null
 &nbsp;
   Object.keys(pocketKeys).forEach((key) =&gt; {
     store.removeItem(pocketKeys[key])
   })
 &nbsp;
-  const remainingPocketKeys = getAllPocketKeys(local, pocket)
+  const remainingPocketKeys = getAllPocketKeys(local, pocket, stcl)
 &nbsp;
   emitPocket(
     {
@@ -466,7 +469,7 @@ export { emptyPocket, tidyPocket, getAllPocketKeys }
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-10-24T13:44:25.825Z
+                at 2022-10-24T14:55:48.716Z
             </div>
         <script src="prettify.js"></script>
         <script>
