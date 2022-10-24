@@ -1,4 +1,8 @@
 /**
+ * Tools for managing Satchel pockets.
+ */
+
+/**
  * Emit custom event for Satchel pocket opperations.
  *
  * @param {object} detail Event details
