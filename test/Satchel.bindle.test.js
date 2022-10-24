@@ -20,6 +20,18 @@ describe('Satchel: testing pocket cleanup methods exported from extras.js', () =
     expect(pocketKeys.length).toEqual(10)
   })
 
+  test('Test getAllPocketKeys() to for custom "pocket" and Satchel.stcl in localStore', () => {
+    Satchel.stcl = 'test'
+
+    // create pocket entries
+    ;[...Array(10)].forEach(
+      (element, i) => new Satchel(`test-${i}`, {}, true, 'taco-truck')
+    )
+    const pocketKeys = getAllPocketKeys(true, 'taco-truck', 'test')
+    expect(pocketKeys.length).toEqual(10)
+    Satchel.stcl = 'stcl'
+  })
+
   test('Test getAllPocketKeys to return 0 when no items in pocket', () => {
     const pocketKeys = getAllPocketKeys(false, 'false-pocket')
     expect(pocketKeys.length).toEqual(0)
