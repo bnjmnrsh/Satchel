@@ -81,10 +81,10 @@ class Satchel {
     const store = JSON.parse(this.#store.getItem(this.#pocketKey))
     if (!store) return null
     return {
-      age: Number(Date.now() - store.creation),
-      creation: Number(store.creation),
-      expiry: store.expiry ? Number(store.expiry) : null,
-      fresh: Boolean(this.isFresh())
+      age: Date.now() - store.creation,
+      creation: store.creation,
+      expiry: store.expiry ? store.expiry : null,
+      fresh: this.isFresh()
     }
   }
 
@@ -98,9 +98,9 @@ class Satchel {
     if (!item) return null
     this.#store.removeItem(this.#pocketKey)
     Satchel.#emit({
-      key: String(this.#pocketKey),
-      oldValue: String(item),
-      storageArea: String(Satchel.#storageAreaString(this.#store)),
+      key: this.#pocketKey,
+      oldValue: item,
+      storageArea: Satchel.#storageAreaString(this.#store),
       action: 'bin'
     })
     return true
@@ -155,15 +155,15 @@ class Satchel {
     temp.expiry = expiry || null
 
     // dont overwrite existing creation time
-    temp.creation = Number(storedEntry.creation) || Date.now()
+    temp.creation = storedEntry.creation || Date.now()
     // Set storage values
     this.#store.setItem(this.#pocketKey, JSON.stringify(temp))
 
     Satchel.#emit({
-      key: String(this.#pocketKey),
+      key: this.#pocketKey,
       newValue: JSON.stringify(temp),
       oldValue: storedEntry ? JSON.stringify(storedEntry) : null,
-      storageArea: String(Satchel.#storageAreaString(this.#store)),
+      storageArea: Satchel.#storageAreaString(this.#store),
       action: 'set'
     })
     return this
@@ -177,7 +177,7 @@ class Satchel {
   isFresh() {
     const store = JSON.parse(this.#store.getItem(this.#pocketKey))
     if (!store) return null
-    return Boolean(!store?.expiry ? true : store.expiry - Date.now() > 0)
+    return !store?.expiry ? true : store.expiry - Date.now() > 0
   }
 
   /**
@@ -187,7 +187,7 @@ class Satchel {
    * @returns {string} the key to the current pocket-key
    */
   getKey() {
-    return String(this.#pocketKey)
+    return this.#pocketKey
   }
 
   /**
@@ -215,7 +215,7 @@ class Satchel {
       newValue: null,
       oldValue: null,
       storageArea: null,
-      url: String(window.location.href),
+      url: window.location.href,
       action: null
     }
     detail = { ...required, ...detail }

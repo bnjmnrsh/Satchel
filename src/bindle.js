@@ -23,7 +23,7 @@ function emitPocket(detail = {}) {
     startingPocketKeys: null,
     remainingKeysInStore: null,
     storageArea: null,
-    url: String(window.location.href)
+    url: window.location.href
   }
   detail = { ...required, ...detail }
   const event = new CustomEvent('Satchel', {
@@ -82,20 +82,19 @@ function tidyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
     if (!expiry || expiry - Date.now() > 0) return null
     store.removeItem(pocketKeys[key])
   })
-  const remainingPocketKeys = getAllPocketKeys(local, pocket)
 
   emitPocket(
     {
       action: 'tidyPocket',
-      pocket: String(pocket),
+      pocket: pocket,
       remainingPocketKeys: getAllPocketKeys(local, pocket, stcl).length,
-      startingPocketKeys: Number(pocketKeys.length),
-      remainingKeysInStore: Number(store.length),
-      storageArea: String(storageAreaString(store))
+      remainingKeysInStore: store.length,
+      startingPocketKeys: pocketKeys.length,
+      storageArea: storageAreaString(store)
     },
     true
   )
-  return [remainingPocketKeys.length, store.length]
+  return [getAllPocketKeys(local, pocket).length, store.length]
 }
 
 /**
@@ -119,11 +118,11 @@ function emptyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
   emitPocket(
     {
       action: 'emptyPocket',
-      pocket: String(pocket),
-      remainingPocketKeys: Number(remainingPocketKeys.length),
-      startingPocketKeys: Number(pocketKeys.length),
-      remainingKeysInStore: Number(store.length),
-      storageArea: String(storageAreaString(store))
+      pocket: pocket,
+      remainingPocketKeys: remainingPocketKeys.length,
+      remainingKeysInStore: store.length,
+      startingPocketKeys: pocketKeys.length,
+      storageArea: storageAreaString(store)
     },
     true
   )
