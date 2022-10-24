@@ -273,4 +273,3 @@ class Satchel {
 }
 
 export { Satchel }
-export { emptyPocket, tidyPocket, getAllPocketKeys } from './bindle'
