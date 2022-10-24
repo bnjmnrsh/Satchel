@@ -4,9 +4,9 @@
   https://ilikekillnerds.com/2020/02/testing-event-listeners-in-jest-without-using-a-library/
 
   We can, however, use jest-environment-jsdom to listen for CustomEvents on the window.
-  We can then use just.fn() to mock the event response instead. In this case, our event payload
+  We can then use jest.fn() to mock the event response instead. In this case, our event payload
   includes timestamps which presents a challenge, because after unwinding the returned Promise,
-  Jest does not provide methods for easy testing individual property values, like we can with
+  Jest does not provide methods for easy testing of individual property values, like we can with
   `expect.objectContaining()`. Instead, we need to work with `.resolves.toReturnWith()`
   to access the Promise response, and so we must test against a preconfigured object.
   Because we can't choose which properties within the promise response to test,
