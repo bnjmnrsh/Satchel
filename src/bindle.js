@@ -103,11 +103,11 @@ function tidyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
  *
  * @param {boolean} local specify sessionStorage (default) or localStorage
  * @param {string} pocket namespace prefix, default 'pocket'
- * @returns {array} The number of poket keys remaing in store, which if sucessful should be 0.
+ * @returns {array|null} The number of pocket-keys remaing in store, which if sucessful should be [0, store.length].
  */
 function emptyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
   const store = local ? window.localStorage : window.sessionStorage
-  const pocketKeys = getAllPocketKeys(local, pocket)
+  if (!pocketKeys.length) return null
 
   Object.keys(pocketKeys).forEach((key) => {
     store.removeItem(pocketKeys[key])
