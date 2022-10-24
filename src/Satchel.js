@@ -141,10 +141,12 @@ class Satchel {
       throw new Error(
         'Satchel.set({data}): "data" must be a string or an object.'
       )
-      if (!JSON.parse(JSON.stringify(data))) {
-        throw new Error(
-          'Satchel.set({data}): "data" must be a serializable object or a string.'
-        )
+    }
+    if (data && typeof data === 'object') {
+      try {
+        JSON.parse(JSON.stringify(data))
+      } catch (e) {
+        throw new Error(`Satchel.set({data}): 'data': ${e}`)
       }
     }
     const storedEntry = this.get(true)

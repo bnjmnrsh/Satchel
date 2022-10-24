@@ -38,6 +38,21 @@ describe('Satchel: Test Satchel.set()', () => {
     expect(() => badTaco()).toThrow(new Error(ERROR_MESSAGE))
   })
 
+  test('Satchel.set() throw error when trying to set object with circular structure.', () => {
+    const ERROR_MESSAGE = `Satchel.set({data}): 'data': TypeError: Converting circular structure to JSON
+    --> starting at object with constructor 'Object'
+    --- property 'myself' closes the circle`
+    function badTaco() {
+      const circularReference = {}
+      circularReference.myself = circularReference
+
+      new Satchel('taco', {
+        data: circularReference
+      })
+    }
+    expect(() => badTaco()).toThrow(new Error(ERROR_MESSAGE))
+  })
+
   test('Satchel.set() throw error when trying to set anything other then a number or null to cargo.expiry.', () => {
     const ERROR_MESSAGE =
       'Satchel.set({expiry}): "expiry" must be null or a number.'
