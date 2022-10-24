@@ -1,5 +1,5 @@
 /**
- * A utility library for managaing namespaced sessionStorage and localStorage entries.
+ * A utility for managaing the freshness of namespaced sessionStorage and localStorage entries.
  */
 class Satchel {
   static _stcl
@@ -58,7 +58,7 @@ class Satchel {
   }
 
   /**
-   * Getter for Satchel.stcl property
+   * Getter for the Satchel.stcl property.
    * Returns the prefix for current Satchel instance, defaulting to 'stcl'.
    *
    * @static
@@ -122,7 +122,7 @@ class Satchel {
   }
 
   /**
-   * Sets the data, for a given key and namespace
+   * Sets the cargo object for a given key and namespace.
    *
    * @param {object} settings object
    * @property {object|string} data the Storage object to set
@@ -228,7 +228,7 @@ class Satchel {
   }
 
   /**
-   * Get the Storage type as a string 'localStorage' or 'sessionStorage'
+   * Get the Storage type as a string: 'localStorage' or 'sessionStorage'.
    *
    * @param {object} Storage object
    * @returns {string} the Storage type as a string 'localStorage' or 'SessionStorage'
