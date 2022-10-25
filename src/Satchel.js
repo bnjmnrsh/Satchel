@@ -75,7 +75,7 @@ class Satchel {
    * @property {number} age in milliseconds
    * @property {number} creation Date.now() (ms)src/Satchel.js
    * @property {boolean} fresh if Store key is fresh
-   * @return {Age} An age object representing the age of the current Store key.
+   * @return {Age|null} An age object representing the age of the current Store key.
    */
   age() {
     const store = JSON.parse(this.#store.getItem(this.#pocketKey))
@@ -114,7 +114,7 @@ class Satchel {
    */
   get(getStale = false) {
     const item = this.#store.getItem(this.#pocketKey)
-    if (!item) return false
+    if (!item) return false // TODO: return null instead
     if ((this.isFresh() && !getStale) || getStale) {
       return JSON.parse(item)
     }
