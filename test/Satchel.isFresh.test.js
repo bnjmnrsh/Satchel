@@ -16,7 +16,7 @@ test('Retrieving values from an  expired key.', () => {
   expect(satchel.isFresh()).toEqual(false)
   expect(satchel.get(true)).toHaveProperty('data')
   expect(satchel.get(true)).toHaveProperty('expiry', EXP)
-  expect(satchel.get(true)).toHaveProperty('creation')
+  expect(satchel.get(true)).toHaveProperty('_creation')
 })
 
 test('Satchel.isFresh() by creating two entries, one fresh, and one expired."', () => {

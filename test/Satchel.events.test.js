@@ -28,13 +28,13 @@ describe('Satchel: testing custom events', () => {
     // We nuke the creation timestamps so we can run deterministic tests
     if (eventData.newValue) {
       let newValue = JSON.parse(eventData.newValue)
-      newValue.creation = null
+      newValue._creation = null
       eventData.newValue = JSON.stringify(newValue)
     }
 
     if (eventData.oldValue) {
       let oldValue = JSON.parse(eventData.oldValue)
-      oldValue.creation = null
+      oldValue._creation = null
       eventData.oldValue = JSON.stringify(oldValue)
     }
 
@@ -50,7 +50,7 @@ describe('Satchel: testing custom events', () => {
       newValue: JSON.stringify({
         data: 'a tasty treat',
         expiry: null,
-        creation: null
+        _creation: null
       }),
       oldValue: null,
       storageArea: 'SessionStorage',
@@ -70,7 +70,7 @@ describe('Satchel: testing custom events', () => {
       oldValue: JSON.stringify({
         data: 'a tasty treat',
         expiry: null,
-        creation: null
+        _creation: null
       }),
       storageArea: 'SessionStorage',
       url: null

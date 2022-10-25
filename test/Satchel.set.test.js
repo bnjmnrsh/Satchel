@@ -21,8 +21,8 @@ describe('Satchel: Test Satchel.set()', () => {
 
     expect(taco.get(true)).toHaveProperty('expiry', EXP)
     expect(taco.get(true)).toHaveProperty('data', VALUE)
-    expect(taco.get(true)).toHaveProperty('creation')
-    expect(taco.get(true).creation).toBeLessThanOrEqual(Date.now())
+    expect(taco.get(true)).toHaveProperty('_creation')
+    expect(taco.get(true)._creation).toBeLessThanOrEqual(Date.now())
   })
 
   test('Satchel.set() throw error when trying to set anything other then a string or an object to cargo.data.', () => {
