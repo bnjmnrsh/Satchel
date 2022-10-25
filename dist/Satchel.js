@@ -73,7 +73,7 @@ class Satchel {
   /**
    * Returns an object of age and freshness related data
    *
-   * @typedef {object} age object
+   * @typedef {object} Age object
    * @property {number} age in milliseconds
    * @property {number} creation Date.now() (ms)src/Satchel.js
    * @property {boolean} fresh if Store key is fresh
@@ -83,8 +83,8 @@ class Satchel {
     const store = JSON.parse(this.#store.getItem(this.#pocketKey));
     if (!store) return null
     return {
-      age: Date.now() - store.creation,
-      creation: store.creation,
+      age: Date.now() - store._creation,
+      creation: store._creation,
       expiry: store.expiry ? store.expiry : null,
       fresh: this.isFresh()
     }
@@ -129,7 +129,6 @@ class Satchel {
    * @param {object} settings object
    * @property {object|string} data the Storage object to set
    * @property {number|null} expiry the expiery date in (ms)
-   * @property {number} creation the creation date in (ms) Date.now()
    *
    * @return {Satchel} Satchel
    */
@@ -157,7 +156,7 @@ class Satchel {
     temp.expiry = expiry || null;
 
     // dont overwrite existing creation time
-    temp.creation = storedEntry.creation || Date.now();
+    temp._creation = storedEntry._creation || Date.now();
     // Set storage values
     this.#store.setItem(this.#pocketKey, JSON.stringify(temp));
 
