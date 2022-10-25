@@ -60,7 +60,7 @@ describe('Satchel: Tests realated to instantiation', () => {
     expect(chicken).toBeInstanceOf(Satchel)
     expect(chicken.get()).toHaveProperty('data', VALUE)
     expect(chicken.get()).toHaveProperty('expiry', null)
-    expect(chicken.get()).toHaveProperty('creation')
+    expect(chicken.get()).toHaveProperty('_creation')
     expect(chicken.getKey()).toBe('stcl.tacos.chicken')
   })
 

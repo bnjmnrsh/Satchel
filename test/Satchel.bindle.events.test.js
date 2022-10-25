@@ -14,16 +14,16 @@ describe('Satchel: testing custom events coming from extras.', () => {
   const fn = jest.fn((e) => {
     const eventData = e.detail
 
-    // We nuke the creation timestamps so we can run deterministic tests
+    // We nuke the _creation timestamps so we can run deterministic tests
     if (eventData.newValue) {
       let newValue = JSON.parse(eventData.newValue)
-      newValue.creation = null
+      newValue._creation = null
       eventData.newValue = JSON.stringify(newValue)
     }
 
     if (eventData.oldValue) {
       let oldValue = JSON.parse(eventData.oldValue)
-      oldValue.creation = null
+      oldValue._creation = null
       eventData.oldValue = JSON.stringify(oldValue)
     }
 
