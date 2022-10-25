@@ -275,7 +275,7 @@ class Satchel {
     const pocketKey = `${Satchel.stcl}.${pocket}.${key}`
     const store = local ? window.localStorage : window.sessionStorage
     const item = JSON.parse(store.getItem(pocketKey))
-    if (!item || item.length === 0) return false
+    if (!item || item.length === 0) return null
 
     return new Satchel(key, item, local, pocket)
   }

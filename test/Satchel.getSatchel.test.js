@@ -40,8 +40,8 @@ describe('Satchel: Tests realated to Satchel.getSatchel()', () => {
     expect(retrievedTaco.get()).toHaveProperty('data', 'a tasty treat')
   })
 
-  test('Satchel.getSatchel() to return false if no object in store', () => {
+  test('Satchel.getSatchel() to return null if no object in store', () => {
     const notThere = Satchel.getSatchel('burrito')
-    expect(notThere).toBe(false)
+    expect(notThere).toBe(null)
   })
 })
