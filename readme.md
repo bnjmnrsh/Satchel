@@ -177,7 +177,7 @@ To work with stored data `Satchel` provides the following instance methods.
 ---
 #### `.age()` -> number|null
 
-Returns an object of age-related values.
+Returns an object of age-related values, or `null` if the key is not found in the store.
 
 ```javascript
 {
@@ -218,7 +218,7 @@ e.detail {
 ---
 #### `.get() -> object|false|null`
 
-If the stored entry is 'fresh', this method returns the stored item as an object containing data (object|string) and expiry (number in seconds) properties, returning false if not 'fresh'. The method accepts an optional boolean, which forces the return of the stored entry regardless of whether the entry is fresh or not. `Satchel.get()` will also return false if a store entry can't be found for the current Satchel instance. If no entry is found for the current instance, as the result of a previous `.bin()` operation, `.get()` will return `null`.
+If the stored entry is 'fresh', this method returns the stored item as an object containing data (object|string) and expiry (number in seconds) properties, returning false if not 'fresh'. The method accepts an optional boolean, which forces the return of the stored entry regardless of whether the entry is fresh or not. If no entry is found for the current instance, for example as the result of a previous `.bin()` operation, `.get()` will return `null`.
 
 Usage:
 ```javascript
@@ -226,7 +226,7 @@ console.log(taco.get()); // { data: null, expiry: null }`
 ```
 
 ---
-#### `.set() -> object`
+#### `.set() -> Sarchel object`
 
 Accepts two values: `data` (string|object) and `expiry` (number). Objects passed to `data` will be passed through `JSON.stringify()`. `expiry` represents a future UNIX date `number` in seconds until the current entry expires.
 
@@ -257,9 +257,9 @@ e.detail {
 }
 ```
 ---
-#### `.isFresh() -> boolean`
+#### `.isFresh() -> boolean|null`
 
-Returns a `boolean` indicating the freshness of the current store.
+Returns a `boolean` indicating the freshness of the current key in storage, `null` if the key could not be found.
 
 Usage:
 ```javascript
@@ -268,7 +268,7 @@ console.log(taco.isFresh()); // true
 ---
 #### `.getKey() -> string`
 
-Returns a dot-separated string representing the key of the current Satchel instance, including prefix and 'pocket' namespaces. Note that `getKey()` returns the key value as stored on the current instance, and is not proof that the key currently exists in storage.
+Returns a dot-separated string representing the key of the current Satchel instance, including prefix and 'pocket' namespaces. Note that `getKey()` returns the key value as stored on the current `Satchel` instance, and is _not_ proof that the key currently exists in storage.
 The default instance namespace is `stchl`, and the default "pocket" namespace is `pocket`.
 
 See notes on [Pockets & Namespaces](#pockets--namespaces-).
@@ -282,10 +282,10 @@ console.log(taco.getKey()) // "stchl.pocket.taco"
 ---
 
 ## Satchel Static Methods [↑](#table-of-contents)
-### `Satchel.getSatchel() --> Satchel`
+### `Satchel.getSatchel() --> Satchel|null`
 `Satchel.getSatchel(key, local=false, pocket='pocket')`
 
-Returns a `Satchel` instance if the key is found in storage or `false` if not found. Accepts a `string` for the 'key' (required), `boolean` for the storage area, and `string` for the 'pocket' namespace (optional). Default is `false` for `sessionStorage`, `true` for `localStorage`.
+Returns a `Satchel` instance if the key is found in storage or `null` if not found. Accepts a `string` for the 'key' (required), `boolean` for the storage area, and `string` for the 'pocket' namespace (optional). Default is `false` for `sessionStorage`, `true` for `localStorage`.
 
 Useage: `Satchel.getSatchel('taco', true, 'myPocket')`
 
