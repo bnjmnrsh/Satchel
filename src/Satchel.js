@@ -154,7 +154,7 @@ class Satchel {
     temp.expiry = expiry || null
 
     // dont overwrite existing creation time
-    temp._creation = storedEntry._creation || Date.now()
+    temp._creation = storedEntry?._creation || Date.now()
     // Set storage values
     this.#store.setItem(this.#pocketKey, JSON.stringify(temp))
 
