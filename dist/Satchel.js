@@ -1,5 +1,5 @@
 
-/* ! @preserve @bnjmnrsh/satchel v0.2.1 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
+/* ! @preserve @bnjmnrsh/satchel v0.2.2 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
 /**
  * A utility for managaing the freshness of namespaced sessionStorage and localStorage entries.
  */
@@ -116,7 +116,7 @@ class Satchel {
    */
   get(getStale = false) {
     const item = this.#store.getItem(this.#pocketKey);
-    if (!item) return false // TODO: return null instead
+    if (!item) return null
     if ((this.isFresh() && !getStale) || getStale) {
       return JSON.parse(item)
     }
@@ -156,7 +156,7 @@ class Satchel {
     temp.expiry = expiry || null;
 
     // dont overwrite existing creation time
-    temp._creation = storedEntry._creation || Date.now();
+    temp._creation = storedEntry?._creation || Date.now();
     // Set storage values
     this.#store.setItem(this.#pocketKey, JSON.stringify(temp));
 
@@ -277,7 +277,7 @@ class Satchel {
     const pocketKey = `${Satchel.stcl}.${pocket}.${key}`;
     const store = local ? window.localStorage : window.sessionStorage;
     const item = JSON.parse(store.getItem(pocketKey));
-    if (!item || item.length === 0) return false
+    if (!item || item.length === 0) return null
 
     return new Satchel(key, item, local, pocket)
   }
