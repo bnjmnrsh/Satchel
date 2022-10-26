@@ -114,7 +114,7 @@ class Satchel {
    */
   get(getStale = false) {
     const item = this.#store.getItem(this.#pocketKey)
-    if (!item) return false // TODO: return null instead
+    if (!item) return null
     if ((this.isFresh() && !getStale) || getStale) {
       return JSON.parse(item)
     }
