@@ -14,10 +14,10 @@
 ![Statements](./badges/coverage-statements.svg)
 ![Jest coverage](./badges/coverage-jest%20coverage.svg)
 
-##Table of Contents
+## Table of Contents
 
-- [Installation](#Installation)
-- [What is this?](#what-is-this)
+- [Installation](#Installation-)
+- [What is this?](#what-is-this-)
 - [How to use](#how-to-use-)
 - [sessionStorage & localStorage](#sessionstorage-&-localstorage-)
 - [Pockets & Namespaces](#pockets-&-namespaces-)
@@ -37,7 +37,7 @@ npm i https://github.com/bnjmnrsh/satchel
 ---
 ## What is this? [↑](#table-of-contents)
 
-`Satchel.js` is a library for managing browser `sessionStorage` and `localStorage` entries. It allows developers to set expiry times for entries and test a given entry's freshness when retrieving values. It also allows for the namespacing of entries using shared key prefixes called 'pockets'. To help manage pockets, `Satchel.js` ships with `bindle.js`, a small suite of optional imports: `emptyPocket()`, `tidyPocket` and `getAllPocketKeys()`.
+`Satchel.js` is a library for managing browser `sessionStorage` and `localStorage` entries. It allows developers to set expiry times for entries and test a given entry's freshness when retrieving values. It also allows for the namespacing of entries using shared key prefixes called 'pockets'. To help manage pockets, `Satchel.js` ships with `bindle.js`, a small suite of optional imports: `emptyPocket()`, `tidyPocket()` and `getAllPocketKeys()`.
 
 ---
 ## How to use [↑](#table-of-contents)
