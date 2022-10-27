@@ -22,6 +22,18 @@ describe('Satchel: Tests realated to instantiation', () => {
     expect(() => new Satchel('taco', 42)).toThrow(new Error(ERROR_MESSAGE))
   })
 
+  test('Satchel should be able to set cargo.data independant of cargo.expiry', () => {
+    const testTaco = new Satchel('taco', { data: '42' }, false)
+    expect(testTaco.get().data).toBe('42')
+    expect(testTaco.get().expiry).toBe(null)
+  })
+
+  test('Satchel should be able to set cargo.expiry independant of cargo.data', () => {
+    const testTaco = new Satchel('taco', { expiry: 1666878977865 }, false)
+    expect(testTaco.get(true).data).toBe(null)
+    expect(testTaco.get(true).expiry).toBe(1666878977865)
+  })
+
   test('Satchel should throw an error if the localStore parameter is not a boolian.', () => {
     const ERROR_MESSAGE = 'Satchel: "local" must be a boolean.'
     expect(() => new Satchel('taco', {}, null)).toThrow(
@@ -34,15 +46,6 @@ describe('Satchel: Tests realated to instantiation', () => {
     expect(() => new Satchel('taco', {}, true, 42)).toThrow(
       new Error(ERROR_MESSAGE)
     )
-  })
-
-  test('Satchel should throw an error if passed anything other then "null" or a numeric value for "expiry"', () => {
-    const ERROR_MESSAGE =
-      'Satchel.set({expiry}): "expiry" must be null or a number.'
-    function badTacos() {
-      new Satchel('bad-tacos', { data: null, expiry: 'guaque' })
-    }
-    expect(() => badTacos()).toThrow(new Error(ERROR_MESSAGE))
   })
 
   test('Create new localStore instance of Satchel, with a Pocket of "tacos" and a Key of "Chicken" holding a data value of "very good with guaque"', () => {
