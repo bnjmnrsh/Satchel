@@ -228,13 +228,17 @@ console.log(taco.get()); // { data: null, expiry: null }`
 ---
 #### `.set() -> Sarchel object`
 
-Accepts two values: `data` (string|object) and `expiry` (number). Objects passed to `data` will be passed through `JSON.stringify()`. `expiry` represents a future UNIX date `number` in seconds until the current entry expires.
+Accepts a `cargo` object with either of two optional values:
+- `data` (string|object) Objects passed to `data` will be passed through `JSON.stringify()`.
+- `expiry` (number) represents a future UNIX date in seconds until the current entry expires.
+
+As of version 0.2.3 `cargo.data` and `cargo.expiry` can be set independently.
 
 Usage:
 ```javascript
-
-const taco = new Satchel('taco', {data: 'a tasty treat'})
-taco.set({data: 'a great snack', expiry: Date.now() + someTime})
+const _24h = 86400
+const taco = new Satchel('taco',{data: 'a tasty treat'})
+taco.set({expiry: Date.now() + _24h})
 ```
 
 ##### [`CustomEvent`](#satchel-events-):
