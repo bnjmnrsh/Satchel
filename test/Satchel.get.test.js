@@ -25,4 +25,19 @@ describe('Satchel.get()', () => {
     expired.bin()
     expect(expired.get()).toBe(null)
   })
+
+  test('Should return a cargo.data object', () => {
+    const taco = new Satchel('taco', { data: { someKey: 'someVal' } })
+    expect(typeof taco.get().data === 'object').toBe(true)
+  })
+
+  test('Should return a cargo.data string', () => {
+    const taco = new Satchel('taco', { data: 'someVal' })
+    expect(typeof taco.get().data === 'string').toBe(true)
+  })
+
+  test('Should return a cargo.data number', () => {
+    const taco = new Satchel('taco', { data: 42 })
+    expect(typeof taco.get().data === 'number').toBe(true)
+  })
 })

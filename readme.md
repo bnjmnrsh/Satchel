@@ -67,15 +67,15 @@ Satchel(
 ```
 At a minimum, `Satchel` requires a `key` to instantiate. During setup, if not provided any further values, `Satchel` will create a `sessionStorage` (default) or `localStorage` entry with a string representation of a default `cargo` object:
 ```javascript
-{ data: null, expiry:null, creation: number }
+{ data: null, expiry:null, _creation: number }
 ```
 
 `Satchel`'s cargo object contains three properties:
-  - `data`: can be a string or serialisable object †
+  - `data`: can be a number, string or serialisable object †
   - `expiry`: an optional number, representing a future UNIX time in seconds
-  - `creation`:  a UNIX creation timestamp in seconds (cannot be modified directly) ††
+  - `_creation`:  a UNIX creation timestamp in seconds (cannot be modified directly) ††
 
-Both the `data` and `expiry` properties default to `null`. You can update these values using [`.set()`](#set---object).
+Both the `data` and `expiry` properties default to `null`. You can update and retrieve these values using [`.set()`](#set---sarchel-object) and [`.get()`](#get---objectfalsenull)††.
 
 ```javascript
 const taco = new Satchel('taco')
@@ -87,9 +87,9 @@ console.log(taco.get())
 // {data: 'a tasty treat', expiry: null}
 ```
 
-> † ⚠️ NOTE: `localStorage` and `sessionStorage` can only hold string values, so any objects passed to `Satchel` are passed thorough [`JSON.stringify()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description) which has inherent limitations.
+> † ⚠️ NOTE: `localStorage` and `sessionStorage` can only hold string values. Any data passed to `Satchel.set()` is run thorough [`JSON.stringify()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description) which has inherent limitations, effecting deeply nested objects, circular references, and [very large numbers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt).
 
-> †† ☝️ NOTE: The `creation` property  holds a UNIX timestamp recording the moment a key was created –– it cannot be modified directly.
+> †† ☝️ NOTE: The `_creation` property  holds a UNIX timestamp recording the moment a key was created –– it cannot be modified directly.
 
 ---
 ## Choosing sessionStorage or localStorage [↑](#table-of-contents)
@@ -235,7 +235,7 @@ console.log(taco.get()); // { _creation: 1666884532131, data: null, expiry: null
 #### `.set() -> Sarchel object`
 
 Accepts a `cargo` object with either of two optional values:
-- `data` (string|object) Objects passed to `data` will be passed through `JSON.stringify()`.
+- `data` (number|string|object) Objects passed to `data` will be passed through `JSON.stringify()`.†
 - `expiry` (number) represents a future UNIX date in seconds until the current entry expires.
 
 As of version 0.2.3 `cargo.data` and `cargo.expiry` can be set independently.
@@ -246,6 +246,8 @@ const _24h = 86400
 const taco = new Satchel('taco',{data: 'a tasty treat'})
 taco.set({expiry: Date.now() + _24h})
 ```
+
+> † ⚠️ NOTE: `localStorage` and `sessionStorage` can only hold string values. Any data passed to `Satchel.set()` is run thorough [`JSON.stringify()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify#description) which has inherent limitations, effecting deeply nested objects, circular references, and [very large numbers](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/BigInt).
 
 ##### [`CustomEvent`](#satchel-events-):
 ```javascript
