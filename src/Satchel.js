@@ -137,9 +137,14 @@ class Satchel {
     data = exsisting?.data && !data ? exsisting.data : data
     expiry = exsisting?.expiry && !expiry ? exsisting.expiry : expiry
 
-    if (data && typeof data !== 'string' && !this.#isObject(data)) {
+    if (
+      data &&
+      typeof data !== 'string' &&
+      typeof data !== 'number' &&
+      !this.#isObject(data)
+    ) {
       throw new Error(
-        'Satchel.set({data}): "data" must be a string or an object.'
+        'Satchel.set({data}): must be either null or a number, string or object.'
       )
     }
 
@@ -152,7 +157,7 @@ class Satchel {
       try {
         JSON.parse(JSON.stringify(data))
       } catch (e) {
-        throw new Error(`Satchel.set({data}): 'data': ${e}`)
+        throw new Error(`Satchel.set({data}): ${e}`)
       }
     }
     const storedEntry = this.get(true)
