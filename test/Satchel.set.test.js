@@ -64,4 +64,36 @@ describe('Satchel: Test Satchel.set()', () => {
     }
     expect(() => badTaco()).toThrow(new Error(ERROR_MESSAGE))
   })
+
+  test('Satchel.set({data}) should not overwrite existing expiry values, if declared.', () => {
+    const testTaco = new Satchel('testTaco', {
+      data: 'testTaco',
+      expiry: 1666878565201
+    })
+
+    expect(testTaco.get(true).expiry).toBe(1666878565201)
+    expect(testTaco.get(true).data).toBe('testTaco')
+
+    testTaco.set({ data: 'newTestTaco' })
+
+    expect(testTaco.get(true).expiry).toBe(1666878565201)
+    expect(testTaco.get(true).data).toBe('newTestTaco')
+
+    testTaco.set({ expiry: 1666878977865 })
+  })
+
+  test('Satchel.set(expiry) should not overwrite existing data values if declared.', () => {
+    const testTaco = new Satchel('testTaco', {
+      data: 'testTaco',
+      expiry: 1666878565201
+    })
+
+    expect(testTaco.get(true).expiry).toBe(1666878565201)
+    expect(testTaco.get(true).data).toBe('testTaco')
+
+    testTaco.set({ expiry: 1666878977865 })
+
+    expect(testTaco.get(true).expiry).toBe(1666878977865)
+    expect(testTaco.get(true).data).toBe('testTaco')
+  })
 })

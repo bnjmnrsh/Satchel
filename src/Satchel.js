@@ -131,14 +131,21 @@ class Satchel {
    * @return {Satchel} Satchel
    */
   set({ data, expiry }) {
-    if (typeof expiry !== 'number' && expiry !== null) {
-      throw new Error(
-        'Satchel.set({expiry}): "expiry" must be null or a number.'
-      )
-    }
+    // check if a key exists in store already
+    const exsisting = JSON.parse(this.#store.getItem(this.#pocketKey))
+    // allow data and expiry to be set independently
+    data = exsisting?.data && !data ? exsisting.data : data
+    expiry = exsisting?.expiry && !expiry ? exsisting.expiry : expiry
+
     if (data && typeof data !== 'string' && !this.#isObject(data)) {
       throw new Error(
         'Satchel.set({data}): "data" must be a string or an object.'
+      )
+    }
+
+    if (typeof expiry !== 'number' && expiry !== null) {
+      throw new Error(
+        'Satchel.set({expiry}): "expiry" must be null or a number.'
       )
     }
     if (data && this.#isObject(data)) {

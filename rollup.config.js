@@ -18,8 +18,7 @@ const configs = {
 }
 
 // Banner
-const banner = `
-/* ! @preserve ${configs.name ? configs.name : pkg.name} v${
+const banner = `/* ! @preserve ${configs.name ? configs.name : pkg.name} v${
   pkg.version
 } | (c) ${new Date().getFullYear()} ${pkg.author} | ${pkg.license} | ${
   pkg.repository.url
