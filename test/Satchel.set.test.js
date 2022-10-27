@@ -25,21 +25,34 @@ describe('Satchel: Test Satchel.set()', () => {
     expect(taco.get(true)._creation).toBeLessThanOrEqual(Date.now())
   })
 
-  test('Satchel.set() throw error when trying to set anything other then a string or an object to cargo.data.', () => {
+  test('Satchel.set() throw error when trying to set anything other then a number, string or object to cargo.data.', () => {
     const ERROR_MESSAGE =
-      'Satchel.set({data}): "data" must be a string or an object.'
+      'Satchel.set({data}): must be either null or a number, string or object.'
 
     function badTaco() {
       new Satchel('taco', {
-        data: 42,
+        data: [42],
         expiry: null
       })
     }
     expect(() => badTaco()).toThrow(new Error(ERROR_MESSAGE))
   })
 
-  test('Satchel.set() throw error when trying to set object with circular structure.', () => {
-    const ERROR_MESSAGE = `Satchel.set({data}): 'data': TypeError: Converting circular structure to JSON
+  test('Satchel.set() throw error when trying to set a bigInt to cargo.data.', () => {
+    const ERROR_MESSAGE =
+      'Satchel.set({data}): must be either null or a number, string or object.'
+
+    function badTaco() {
+      new Satchel('taco', {
+        data: 9007199254740991n,
+        expiry: null
+      })
+    }
+    expect(() => badTaco()).toThrow(new Error(ERROR_MESSAGE))
+  })
+
+  test('Satchel.set() throw error when trying to set object with circular structure to cargo.data.', () => {
+    const ERROR_MESSAGE = `Satchel.set({data}): TypeError: Converting circular structure to JSON
     --> starting at object with constructor 'Object'
     --- property 'myself' closes the circle`
     function badTaco() {
