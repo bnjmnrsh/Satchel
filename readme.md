@@ -218,11 +218,17 @@ e.detail {
 ---
 #### `.get() -> object|false|null`
 
-If the stored entry is 'fresh', this method returns the stored item as an object containing data (object|string) and expiry (number in seconds) properties, returning false if not 'fresh'. The method accepts an optional boolean, which forces the return of the stored entry regardless of whether the entry is fresh or not. If no entry is found for the current instance, for example as the result of a previous `.bin()` operation, `.get()` will return `null`.
+If the stored entry is 'fresh', `.get()` returns the value of the stored key object containing the properties:
+- `data` (object|string)
+- `expiry` (number in seconds) properties, returning false if not 'fresh'.
+
+The method accepts an optional boolean `.get(true)`, which will force it to return a stored entry regardless of whether the entry is 'fresh' or not.
+If an entry cannot be found for the current key instance (for example as the result of a previous `.bin()` operation), `.get()` returns `null`.
 
 Usage:
 ```javascript
-console.log(taco.get()); // { data: null, expiry: null }`
+const taco = new Satchel('taco')
+console.log(taco.get()); // { _creation: 1666884532131, data: null, expiry: null }`
 ```
 
 ---
@@ -284,7 +290,6 @@ console.log(taco.getKey()) // "stchl.pocket.taco"
 ```
 
 ---
-
 ## Satchel Static Methods [↑](#table-of-contents)
 ### `Satchel.getSatchel() --> Satchel|null`
 `Satchel.getSatchel(key, local=false, pocket='pocket')`
