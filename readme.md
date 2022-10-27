@@ -32,7 +32,7 @@
 ## Installation [↑](#table-of-contents)
 
 ```bash
-npm i https://github.com/bnjmnrsh/satchel
+npm i https://github.com/bnjmnrsh/satchel#v0.2.4
 ```
 ---
 ## What is this? [↑](#table-of-contents)
