@@ -17,7 +17,6 @@
 function emitPocket(detail = {}) {
   const required = {
     action: null,
-
     pocket: null,
     remainingPocketKeys: null,
     startingPocketKeys: null,
@@ -86,7 +85,7 @@ function tidyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
   emitPocket(
     {
       action: 'tidyPocket',
-      pocket: pocket,
+      pocket,
       remainingPocketKeys: getAllPocketKeys(local, pocket, stcl).length,
       remainingKeysInStore: store.length,
       startingPocketKeys: pocketKeys.length,
@@ -118,7 +117,7 @@ function emptyPocket(local = false, pocket = 'pocket', stcl = 'stcl') {
   emitPocket(
     {
       action: 'emptyPocket',
-      pocket: pocket,
+      pocket,
       remainingPocketKeys: remainingPocketKeys.length,
       remainingKeysInStore: store.length,
       startingPocketKeys: pocketKeys.length,
