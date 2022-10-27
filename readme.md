@@ -19,13 +19,13 @@
 - [Installation](#Installation-)
 - [What is this?](#what-is-this-)
 - [How to use](#how-to-use-)
-- [sessionStorage & localStorage](#sessionstorage-&-localstorage-)
-- [Pockets & Namespaces](#pockets--namespaces-)
+- [Choosing sessionStorage or localStorage](#choosing-sessionstorage-or-localstorage-)
+- [Satchel Pockets & Namespaces](#satchel-pockets--namespaces-)
 - [Satchel Events](#satchel-events-)
-- [Freshness](#satchel-freshness-)
+- [Satchel Freshness](#satchel-freshness-)
 - [Satchel Instance Methods](#satchel-instance-methods-)
 - [Satchel Static Methods](#satchel-static-methods-)
-- [bindle.js: optional imports](#bindle-optional-imports-)
+- [Optional imports in bindle.js](#optional-imports-in-bindlejs-)
 - [Licence & Copyright](#licence-isc-)
 
 ---
@@ -92,7 +92,7 @@ console.log(taco.get())
 > †† ☝️ NOTE: The `creation` property  holds a UNIX timestamp recording the moment a key was created –– it cannot be modified directly.
 
 ---
-## sessionStorage & localStorage [↑](#table-of-contents)
+## Choosing sessionStorage or localStorage [↑](#table-of-contents)
 
 `Satchel` uses `sessionStorage` by default. You can specify `localStorage` by passing `true` as a third  parameter during instantiation:
 
@@ -299,7 +299,7 @@ Returns a `Satchel` instance if the key is found in storage or `null` if not fou
 Useage: `Satchel.getSatchel('taco', true, 'myPocket')`
 
 ---
-## Bindle.js: optional imports [↑](#table-of-contents)
+## Optional imports in bindle.js [↑](#table-of-contents)
 
 `Satchel` comes with `bindle.js`, which adds optional methods to help manage pocket namespaces.
 
