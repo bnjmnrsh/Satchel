@@ -1,6 +1,6 @@
 {
   "name": "@bnjmnrsh/satchel",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A utility for managaing the freshness of namespaced sessionStorage and localStorage entries.",
   "main": "dist/Satchel.min.js",
   "type": "module",
