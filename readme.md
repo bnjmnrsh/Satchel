@@ -20,7 +20,7 @@
 - [What is this?](#what-is-this-)
 - [How to use](#how-to-use-)
 - [sessionStorage & localStorage](#sessionstorage-&-localstorage-)
-- [Pockets & Namespaces](#pockets-&-namespaces-)
+- [Pockets & Namespaces](#pockets--namespaces-)
 - [Satchel Events](#satchel-events-)
 - [Freshness](#satchel-freshness-)
 - [Satchel Instance Methods](#satchel-instance-methods-)
@@ -29,7 +29,7 @@
 - [Licence & Copyright](#licence-isc-)
 
 ---
-## Installation [↑](##table-of-contents)
+## Installation [↑](#table-of-contents)
 
 ```bash
 npm i https://github.com/bnjmnrsh/satchel
