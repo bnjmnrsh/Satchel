@@ -291,6 +291,23 @@ class Satchel {
 
     return new Satchel(key, item, local, pocket)
   }
+
+  /**
+   * A static method for setting a Satchel key, without calling `new Satchel`.
+   * When you want to use Satchel only for it's side effects.
+   *
+   * @param {string|null} key Storage key
+   * @param {object} cargo The cargo payload to be saved to Storage
+   * @property {object|string} cargo.data The data to be saved, may be string or object
+   * @property {number|null} cargo.expiry The expiry time of the cargo ,may be a number or null
+   * @param {boolean} [local=false] Specify sessionStorage (default) or localStorage
+   * @param {string} [pocket='pocket'] Namespace for Storage keys, default is 'pocket'
+   * @returns {undefined}
+   */
+  static setKey(key = null, cargo = {}, local = false, pocket = 'pocket') {
+    /* eslint-disable no-new */
+    new Satchel(key, cargo, local, pocket)
+  }
 }
 
 export { Satchel }

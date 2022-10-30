@@ -1,4 +1,4 @@
-/* ! @preserve @bnjmnrsh/satchel v0.2.4 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
+/* ! @preserve @bnjmnrsh/satchel v0.2.4.1 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
 /**
  * Tools for managing Satchel pockets.
  */

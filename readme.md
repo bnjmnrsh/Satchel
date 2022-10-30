@@ -91,6 +91,8 @@ console.log(taco.get())
 
 > †† ☝️ NOTE: The `_creation` property  holds a UNIX timestamp recording the moment a key was created –– it cannot be modified directly.
 
+See also [Satchel.setKey()](#satchelsetkey----satchel)
+
 ---
 ## Choosing sessionStorage or localStorage [↑](#table-of-contents)
 
@@ -301,6 +303,14 @@ Returns a `Satchel` instance if the key is found in storage or `null` if not fou
 Useage: `Satchel.getSatchel('taco', true, 'myPocket')`
 
 ---
+
+### `Satchel.setKey() --> undefined`
+
+For when you want to use `Satchel` for its side effectes only, and don't need an instance returned. Is a thin wrapper around `new Satchel()` See [How to use](#how-to-use-) for a full list of options.
+
+Useage: `Satchel.setKey('taco')`
+
+---
 ## Optional imports in bindle.js [↑](#table-of-contents)
 
 `Satchel` comes with `bindle.js`, which adds optional methods to help manage pocket namespaces.
@@ -319,7 +329,7 @@ Usage:
 console.log(getAllPocketKeys(false)) // ['stcl.pocket.taco' ...]
 
 // With a custom prefix:
-Satchel.stcl = tacoTruck
+Satchel.stcl = 'tacoTruck'
 console.log(getAllPocketKeys(false, 'pocket', Satchel.stcl)) // ['tacoTruck.pocket.taco' ...]
 ```
 ### `tidyPocket() --> Array|null`
