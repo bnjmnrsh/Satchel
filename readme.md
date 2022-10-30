@@ -31,6 +31,8 @@
 ---
 ## Installation [↑](#table-of-contents)
 
+Use `npm` to install Satchel from github targeting a specifc tag, drop everything after the hash if you just want the latest version.
+
 ```bash
 npm i https://github.com/bnjmnrsh/satchel#v0.2.4
 ```
