@@ -147,7 +147,7 @@ Basic Usage:
 window.addEventListener('Satchel', fn);
 
 const fn = function(e)  {
-  if (!e.detail) return;
+  if (e.type !== 'Satchel') return
   console.log(e.detail);
 }
 
