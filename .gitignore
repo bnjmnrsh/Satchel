@@ -7,3 +7,5 @@ node_modules
 .env
 .parcel-cache
 .DS_Store
+coverage/*
+!coverage/coverage-summary.json
