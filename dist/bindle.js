@@ -1,4 +1,4 @@
-/* ! @preserve @bnjmnrsh/satchel v0.2.4.1 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
+/* ! @preserve @bnjmnrsh/satchel v0.2.6 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
 /**
  * Tools for managing Satchel pockets.
  */
@@ -22,10 +22,10 @@ function emitPocket(detail = {}) {
     remainingPocketKeys: null,
     startingPocketKeys: null,
     remainingKeysInStore: null,
-    storageArea: null,
-    url: window.location.href
+    storageArea: null
   };
   detail = { ...required, ...detail };
+  detail.url = window.location.href;
   const event = new CustomEvent('Satchel', {
     bubbles: true,
     cancelable: true,

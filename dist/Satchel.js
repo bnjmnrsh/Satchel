@@ -1,4 +1,4 @@
-/* ! @preserve @bnjmnrsh/satchel v0.2.4.1 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
+/* ! @preserve @bnjmnrsh/satchel v0.2.6 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
 /**
  * A utility for managaing the freshness of namespaced sessionStorage and localStorage entries.
  */
@@ -227,10 +227,10 @@ class Satchel {
       newValue: null,
       oldValue: null,
       storageArea: null,
-      url: window.location.href,
       action: null
     };
     detail = { ...required, ...detail };
+    detail.url = window.location.href;
     const event = new CustomEvent('Satchel', {
       bubbles: true,
       cancelable: true,
