@@ -21,10 +21,10 @@ function emitPocket(detail = {}) {
     remainingPocketKeys: null,
     startingPocketKeys: null,
     remainingKeysInStore: null,
-    storageArea: null,
-    url: window.location.href
+    storageArea: null
   }
   detail = { ...required, ...detail }
+  detail.url = window.location.href
   const event = new CustomEvent('Satchel', {
     bubbles: true,
     cancelable: true,

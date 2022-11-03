@@ -226,10 +226,10 @@ class Satchel {
       newValue: null,
       oldValue: null,
       storageArea: null,
-      url: window.location.href,
       action: null
     }
     detail = { ...required, ...detail }
+    detail.url = window.location.href
     const event = new CustomEvent('Satchel', {
       bubbles: true,
       cancelable: true,
