@@ -1,4 +1,4 @@
-/* ! @preserve @bnjmnrsh/satchel v0.2.6 | (c) 2022 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
+/* ! @preserve @bnjmnrsh/satchel v0.2.6 | (c) 2024 bnjmnrsh | ISC | https://github.com/bnjmnrsh/satchel */
 /**
  * A utility for managaing the freshness of namespaced sessionStorage and localStorage entries.
  */
