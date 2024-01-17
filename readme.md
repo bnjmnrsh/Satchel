@@ -2,6 +2,8 @@
 
  __A sessionStorage & localStorage utility with namespaced entries and extra Freshness.__
 
+ A project which uses Sactchel+Bindel extensively can be found here: [Signal-v-Noise](https://bnjmnrsh-projs.github.io/signal-v-noise/) | [GitHub](https://github.com/bnjmnrsh-projs/signal-v-noise)
+
 [![GitHub package.json version](https://img.shields.io/github/package-json/v/bnjmnrsh/satchel)](https://github.com/bnjmnrsh/Satchel)
 [![GitHub license](https://img.shields.io/github/license/bnjmnrsh/Satchel)](https://github.com/bnjmnrsh/Satchel/blob/master/LICENSE)
 [![GitHub file size in bytes](https://img.shields.io/github/size/bnjmnrsh/satchel/dist/Satchel.min.js)](https://raw.githubusercontent.com/bnjmnrsh/Satchel/main/dist/Satchel.min.js)
@@ -31,7 +33,7 @@
 ---
 ## Installation [↑](#table-of-contents)
 
-Use `npm` to install Satchel from github targeting a specifc tag, drop everything after the hash if you just want the latest version.
+Use `npm` to install Satchel from github targeting a specific tag; drop everything after the hash if you just want the latest version.
 
 ```bash
 npm i https://github.com/bnjmnrsh/satchel#v0.2.4
@@ -39,7 +41,7 @@ npm i https://github.com/bnjmnrsh/satchel#v0.2.4
 ---
 ## What is this? [↑](#table-of-contents)
 
-`Satchel.js` is a library for managing browser `sessionStorage` and `localStorage` entries. It allows developers to set expiry times for entries and test a given entry's freshness when retrieving values. It also allows for the namespacing of entries using shared key prefixes called 'pockets'. To help manage pockets, `Satchel.js` ships with `bindle.js`, a small suite of optional imports: `emptyPocket()`, `tidyPocket()` and `getAllPocketKeys()`.
+`Satchel.js` is a library for managing browser `sessionStorage` and `localStorage` entries. It allows developers to set entry expiry times and test a given entry's freshness when retrieving values. It also allows for the namespacing of entries using shared key prefixes called 'pockets'. To help manage pockets, `Satchel.js` ships with `bindle.js`, a small suite of optional imports: `emptyPocket()`, `tidyPocket()` and `getAllPocketKeys()`.
 
 ---
 ## How to use [↑](#table-of-contents)
@@ -131,7 +133,7 @@ console.log(taco.getKey()); // restaurant.pocket.taco <-- prefixed namespace
 
 ---
 ## Satchel Freshness [↑](#table-of-contents)
-Satchel provides several methods to manage key freshness. By default, [`.get()`](#getignorestale--false---objectfalse) will only return values that are fresh, by testing freshness with [`.isFresh()`](#isfresh---boolean) internally. This behaviour can be overridden by passing `.get(true)`, which will return values from the store regardless of freshness.
+Satchel provides several methods to manage key freshness. By default, [`.get()`](#getignorestale--false---objectfalse) will only return values that are fresh by testing freshness with [`.isFresh()`](#isfresh---boolean) internally. This behaviour can be overridden by passing `.get(true)`, which will return values from the store regardless of freshness.
 
 The [`.age()`](#age---numbernull) helper method returns an object of age-related values for a given store key. The returned object includes the properties `age` (seconds), which is the age of the current store, and a `creation` property, a UNIX timestamp of its creation date. It also includes a `fresh` boolean property indicating the record's current freshness state.
 
@@ -170,7 +172,7 @@ e.detail {
 }
 ```
 
-The `action` property indicates the `Satchel` method which fired the event.
+The `action` property indicates the `Satchel` method, which fired the event.
 
 Additionally the optional imports [`tidyPocket()`](#tidypocket----arraynull) and [`emptyPocket()`](#emptypocket----arraynull) emit events with details related to these operations. See [bindle.js](#bindlejs-optional-imports-) for details.
 
@@ -181,7 +183,7 @@ To work with stored data `Satchel` provides the following instance methods.
 ---
 #### `.age()` -> number|null
 
-Returns an object of age-related values, or `null` if the key is not found in the store.
+Returns an object of age-related values or `null` if the key is not found in the store.
 
 ```javascript
 {
@@ -227,7 +229,7 @@ If the stored entry is 'fresh', `.get()` returns the value of the stored key obj
 - `expiry` (number in seconds) properties, returning false if not 'fresh'.
 
 The method accepts an optional boolean `.get(true)`, which will force it to return a stored entry regardless of whether the entry is 'fresh' or not.
-If an entry cannot be found for the current key instance (for example as the result of a previous `.bin()` operation), `.get()` returns `null`.
+If an entry cannot be found for the current key instance (for example, as the result of a previous `.bin()` operation), `.get()` returns `null`.
 
 Usage:
 ```javascript
@@ -302,13 +304,13 @@ console.log(taco.getKey()) // "stchl.pocket.taco"
 
 Returns a `Satchel` instance if the key is found in storage or `null` if not found. Accepts a `string` for the 'key' (required), `boolean` for the storage area, and `string` for the 'pocket' namespace (optional). Default is `false` for `sessionStorage`, `true` for `localStorage`.
 
-Useage: `Satchel.getSatchel('taco', true, 'myPocket')`
+Usage: `Satchel.getSatchel('taco', true, 'myPocket')`
 
 ---
 
 ### `Satchel.setKey() --> undefined`
 
-For when you want to use `Satchel` for its side effectes only, and don't need an instance returned. Is a thin wrapper around `new Satchel()` See [How to use](#how-to-use-) for a full list of options.
+For when you want to use `Satchel` for its side effects only and don't need an instance returned. Is a thin wrapper around `new Satchel()` See [How to use](#how-to-use-) for a full list of options.
 
 Useage: `Satchel.setKey('taco')`
 
